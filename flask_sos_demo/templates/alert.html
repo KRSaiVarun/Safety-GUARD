@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Alert Sent</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+      }
+      a {
+        display: inline-block;
+        margin-top: 20px;
+        color: #2b6cb0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Emergency Alert Sent</h1>
+    <p>We have sent the alert to your emergency contacts.</p>
+    {% if location_link %}
+    <p>
+      Location:
+      <a href="{{ location_link }}" target="_blank">Open in Google Maps</a>
+    </p>
+    {% endif %}
+    <a href="{{ url_for('index') }}">Return to home</a>
+  </body>
+</html>

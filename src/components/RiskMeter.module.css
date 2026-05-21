@@ -1,0 +1,78 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+}
+
+.title {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+
+.gauge {
+  position: relative;
+  width: 180px;
+}
+
+.svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.scoreNum {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 36px;
+  font-weight: 800;
+  font-family: var(--mono);
+  line-height: 1;
+  transition: color 0.5s;
+}
+
+.levelBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border-radius: 100px;
+  border: 1px solid;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: all 0.5s;
+}
+
+.criticalPulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: blink 0.8s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.1; }
+}
+
+.bars {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.bar {
+  height: 4px;
+  width: 32px;
+  border-radius: 2px;
+  transition: background 0.5s;
+}

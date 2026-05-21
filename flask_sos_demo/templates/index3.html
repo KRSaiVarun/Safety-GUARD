@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Emergency Active</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f4f7fb;
+      }
+      .container {
+        max-width: 900px;
+        margin: 24px auto;
+        padding: 16px;
+      }
+      h1 {
+        margin-bottom: 12px;
+      }
+      #map {
+        height: 450px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+      form {
+        margin-top: 20px;
+        display: grid;
+        gap: 12px;
+      }
+      input,
+      button {
+        font-size: 1rem;
+        padding: 10px;
+      }
+      .status {
+        margin-top: 12px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Emergency Active</h1>
+      <div id="map"></div>
+      <p class="status" id="status">Waiting for location...</p>
+      <form action="{{ url_for('verify_reenter_passcode') }}" method="post">
+        <label for="passcode">Enter passcode to cancel emergency</label>
+        <input id="passcode" name="passcode" type="text" required />
+        <button type="submit">Submit passcode</button>
+      </form>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      const initialLat = {{ initial_lat }};
+      const initialLng = {{ initial_lng }};
+      const map = L.map('map').setView([initialLat, initialLng], 16);
+      const marker = L.marker([initialLat, initialLng]).addTo(map).bindPopup('SOS activated location').openPopup();
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      function updateMarker(lat, lng) {
+        marker.setLatLng([lat, lng]);
+        marker.getPopup().setContent('Current SOS location');
+        map.setView([lat, lng], 16);
+        document.getElementById('status').textContent = `Your location is being tracked at ${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      }
+
+      function sendLocation(lat, lng) {
+        fetch('{{ url_for('submit_location') }}', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({lat, lng})
+        }).then(res => res.json()).then(data => {
+          if (data.status !== 'success') {
+            document.getElementById('status').textContent = 'Unable to send location to the server.';
+          }
+        }).catch(() => {
+          document.getElementById('status').textContent = 'Location update failed.';
+        });
+      }
+
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+          function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            updateMarker(lat, lng);
+            sendLocation(lat, lng);
+          },
+          function(error) {
+            document.getElementById('status').textContent = 'Geolocation unavailable. Using fallback location.';
+          },
+          { enableHighAccuracy: true, maximumAge: 10000, timeout: 10000 }
+        );
+      } else {
+        document.getElementById('status').textContent = 'Geolocation is not supported by your browser.';
+      }
+    </script>
+  </body>
+</html>

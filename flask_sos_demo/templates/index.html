@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Safety SOS</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 60px;
+      }
+      button {
+        font-size: 1.1rem;
+        padding: 12px 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Safety SOS</h1>
+    <p>
+      Activate SOS to start the emergency flow and show your current location on
+      the map.
+    </p>
+    <form action="{{ url_for('activate') }}" method="post">
+      <button type="submit">Activate SOS</button>
+    </form>
+  </body>
+</html>
