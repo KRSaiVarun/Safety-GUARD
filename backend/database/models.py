@@ -42,7 +42,7 @@ class EmergencySession(Base):
 
 class LiveLocation(Base):
     __tablename__ = 'live_locations'
-    id = Column(BigInteger, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     session_id = Column(UUID(as_uuid=True), ForeignKey(EMERGENCY_SESSION_ID_FK))
     latitude = Column(DECIMAL(10, 8))
     longitude = Column(DECIMAL(11, 8))
@@ -52,7 +52,7 @@ class LiveLocation(Base):
 
 class EmergencyLog(Base):
     __tablename__ = 'emergency_logs'
-    id = Column(BigInteger, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     session_id = Column(UUID(as_uuid=True), ForeignKey(EMERGENCY_SESSION_ID_FK))
     event_type = Column(String(50))
     description = Column(Text)
@@ -61,7 +61,7 @@ class EmergencyLog(Base):
 
 class Alert(Base):
     __tablename__ = 'alerts'
-    id = Column(BigInteger, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     session_id = Column(UUID(as_uuid=True), ForeignKey(EMERGENCY_SESSION_ID_FK))
     recipient_phone = Column(String(20))
     status = Column(String(50))
@@ -71,7 +71,7 @@ class Alert(Base):
 
 class AlertDeliveryLog(Base):
     __tablename__ = 'alert_delivery_logs'
-    id = Column(BigInteger, primary_key=True)
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
     session_id = Column(UUID(as_uuid=True), ForeignKey(EMERGENCY_SESSION_ID_FK))
     alert_id = Column(BigInteger)
     provider_message_id = Column(String(100), nullable=True)
@@ -85,7 +85,7 @@ class AlertDeliveryLog(Base):
 
 class AIEvent(Base):
     __tablename__ = 'ai_events'
-    id = Column(BigInteger, primary_key=True)
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
     session_id = Column(UUID(as_uuid=True), ForeignKey(EMERGENCY_SESSION_ID_FK))
     event_type = Column(String(50))
     value = Column(DECIMAL(10, 2))

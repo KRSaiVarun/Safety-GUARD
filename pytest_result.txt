@@ -16,11 +16,11 @@ backend/tests/test_alert_service.py::test_update_alert_delivery_status_writes_lo
 ================================== FAILURES ===================================
 __________________ test_create_alert_persists_default_status __________________
 
-self = <sqlalchemy.engine.base.Connection object at 0x000001DE73CEF710>
-dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE73D22CC0>
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE73D9F4A0>
-statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x000001DE73D9F1D0>
-parameters = [('cfeb2fe4eb334c899cf20b59e19cd857', '+15551234567', 'QUEUED', None, '2026-05-21 09:46:51.596116')]
+self = <sqlalchemy.engine.base.Connection object at 0x000001A2F2971DF0>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F28168A0>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2972E70>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x000001A2F2972270>
+parameters = [('e6f8105f543148c4ab34f4d5e5a76bf6', '+15551234567', 'QUEUED', None, '2026-05-21 09:47:45.171662')]
 
     def _exec_single_context(
         self,
@@ -146,11 +146,11 @@ parameters = [('cfeb2fe4eb334c899cf20b59e19cd857', '+15551234567', 'QUEUED', Non
 C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\sqlalchemy\engine\base.py:1967: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE73D22CC0>
-cursor = <sqlite3.Cursor object at 0x000001DE73E32740>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F28168A0>
+cursor = <sqlite3.Cursor object at 0x000001A2F2983BC0>
 statement = 'INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)'
-parameters = ('cfeb2fe4eb334c899cf20b59e19cd857', '+15551234567', 'QUEUED', None, '2026-05-21 09:46:51.596116')
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE73D9F4A0>
+parameters = ('e6f8105f543148c4ab34f4d5e5a76bf6', '+15551234567', 'QUEUED', None, '2026-05-21 09:47:45.171662')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2972E70>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
@@ -160,7 +160,7 @@ C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n
 
 The above exception was the direct cause of the following exception:
 
-db_session = <sqlalchemy.orm.session.Session object at 0x000001DE73D23650>
+db_session = <sqlalchemy.orm.session.Session object at 0x000001A2F28C1430>
 
     def test_create_alert_persists_default_status(db_session):
         session = create_session(db_session, status='ALERT_QUEUED')
@@ -222,27 +222,27 @@ C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n
     self.dialect.do_execute(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE73D22CC0>
-cursor = <sqlite3.Cursor object at 0x000001DE73E32740>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F28168A0>
+cursor = <sqlite3.Cursor object at 0x000001A2F2983BC0>
 statement = 'INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)'
-parameters = ('cfeb2fe4eb334c899cf20b59e19cd857', '+15551234567', 'QUEUED', None, '2026-05-21 09:46:51.596116')
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE73D9F4A0>
+parameters = ('e6f8105f543148c4ab34f4d5e5a76bf6', '+15551234567', 'QUEUED', None, '2026-05-21 09:47:45.171662')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2972E70>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
 E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: alerts.id
 E       [SQL: INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)]
-E       [parameters: ('cfeb2fe4eb334c899cf20b59e19cd857', '+15551234567', 'QUEUED', None, '2026-05-21 09:46:51.596116')]
+E       [parameters: ('e6f8105f543148c4ab34f4d5e5a76bf6', '+15551234567', 'QUEUED', None, '2026-05-21 09:47:45.171662')]
 E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
 
 C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\sqlalchemy\engine\default.py:941: IntegrityError
 ______ test_update_alert_status_applies_valid_transition_and_provider_id ______
 
-self = <sqlalchemy.engine.base.Connection object at 0x000001DE73E4FCB0>
-dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE73E4FDD0>
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE75124DA0>
-statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x000001DE751248F0>
-parameters = [('a96d17cf338448199651437319f3cf87', '+15551234567', 'PROCESSING', None, '2026-05-21 09:46:52.366144')]
+self = <sqlalchemy.engine.base.Connection object at 0x000001A2F29A49E0>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F29A6630>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2BF0860>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x000001A2F2BF03B0>
+parameters = [('66e0c7c6cfaf4d2c86cb38319a2d61fe', '+15551234567', 'PROCESSING', None, '2026-05-21 09:47:45.742633')]
 
     def _exec_single_context(
         self,
@@ -368,11 +368,11 @@ parameters = [('a96d17cf338448199651437319f3cf87', '+15551234567', 'PROCESSING',
 C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\sqlalchemy\engine\base.py:1967: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE73E4FDD0>
-cursor = <sqlite3.Cursor object at 0x000001DE73EDFBC0>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F29A6630>
+cursor = <sqlite3.Cursor object at 0x000001A2F2A3B440>
 statement = 'INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)'
-parameters = ('a96d17cf338448199651437319f3cf87', '+15551234567', 'PROCESSING', None, '2026-05-21 09:46:52.366144')
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE75124DA0>
+parameters = ('66e0c7c6cfaf4d2c86cb38319a2d61fe', '+15551234567', 'PROCESSING', None, '2026-05-21 09:47:45.742633')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2BF0860>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
@@ -382,7 +382,7 @@ C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n
 
 The above exception was the direct cause of the following exception:
 
-db_session = <sqlalchemy.orm.session.Session object at 0x000001DE73E4DCD0>
+db_session = <sqlalchemy.orm.session.Session object at 0x000001A2F29A5E50>
 
     def test_update_alert_status_applies_valid_transition_and_provider_id(db_session):
         session = create_session(db_session)
@@ -441,27 +441,27 @@ C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n
     self.dialect.do_execute(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE73E4FDD0>
-cursor = <sqlite3.Cursor object at 0x000001DE73EDFBC0>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F29A6630>
+cursor = <sqlite3.Cursor object at 0x000001A2F2A3B440>
 statement = 'INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)'
-parameters = ('a96d17cf338448199651437319f3cf87', '+15551234567', 'PROCESSING', None, '2026-05-21 09:46:52.366144')
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE75124DA0>
+parameters = ('66e0c7c6cfaf4d2c86cb38319a2d61fe', '+15551234567', 'PROCESSING', None, '2026-05-21 09:47:45.742633')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2BF0860>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
 E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: alerts.id
 E       [SQL: INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)]
-E       [parameters: ('a96d17cf338448199651437319f3cf87', '+15551234567', 'PROCESSING', None, '2026-05-21 09:46:52.366144')]
+E       [parameters: ('66e0c7c6cfaf4d2c86cb38319a2d61fe', '+15551234567', 'PROCESSING', None, '2026-05-21 09:47:45.742633')]
 E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
 
 C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\sqlalchemy\engine\default.py:941: IntegrityError
 ____________ test_update_alert_status_disallows_invalid_regression ____________
 
-self = <sqlalchemy.engine.base.Connection object at 0x000001DE75126BA0>
-dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE75125A60>
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE7509C4D0>
-statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x000001DE7509EA20>
-parameters = [('49e87de958bf49c4bd55572cb57e4d47', '+15551234567', 'DELIVERED', None, '2026-05-21 09:46:52.891255')]
+self = <sqlalchemy.engine.base.Connection object at 0x000001A2F2BF29C0>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F2BF1700>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2BF0D40>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x000001A2F2B64E60>
+parameters = [('61a29738b1304a8584557a5ca0fc5ec2', '+15551234567', 'DELIVERED', None, '2026-05-21 09:47:46.337298')]
 
     def _exec_single_context(
         self,
@@ -587,11 +587,11 @@ parameters = [('49e87de958bf49c4bd55572cb57e4d47', '+15551234567', 'DELIVERED', 
 C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\sqlalchemy\engine\base.py:1967: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE75125A60>
-cursor = <sqlite3.Cursor object at 0x000001DE73E30340>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F2BF1700>
+cursor = <sqlite3.Cursor object at 0x000001A2F2EB68C0>
 statement = 'INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)'
-parameters = ('49e87de958bf49c4bd55572cb57e4d47', '+15551234567', 'DELIVERED', None, '2026-05-21 09:46:52.891255')
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE7509C4D0>
+parameters = ('61a29738b1304a8584557a5ca0fc5ec2', '+15551234567', 'DELIVERED', None, '2026-05-21 09:47:46.337298')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2BF0D40>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
@@ -601,7 +601,7 @@ C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n
 
 The above exception was the direct cause of the following exception:
 
-db_session = <sqlalchemy.orm.session.Session object at 0x000001DE751279E0>
+db_session = <sqlalchemy.orm.session.Session object at 0x000001A2F2BF23C0>
 
     def test_update_alert_status_disallows_invalid_regression(db_session):
         session = create_session(db_session)
@@ -660,27 +660,27 @@ C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n
     self.dialect.do_execute(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE75125A60>
-cursor = <sqlite3.Cursor object at 0x000001DE73E30340>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F2BF1700>
+cursor = <sqlite3.Cursor object at 0x000001A2F2EB68C0>
 statement = 'INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)'
-parameters = ('49e87de958bf49c4bd55572cb57e4d47', '+15551234567', 'DELIVERED', None, '2026-05-21 09:46:52.891255')
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE7509C4D0>
+parameters = ('61a29738b1304a8584557a5ca0fc5ec2', '+15551234567', 'DELIVERED', None, '2026-05-21 09:47:46.337298')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2BF0D40>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
 E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: alerts.id
 E       [SQL: INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)]
-E       [parameters: ('49e87de958bf49c4bd55572cb57e4d47', '+15551234567', 'DELIVERED', None, '2026-05-21 09:46:52.891255')]
+E       [parameters: ('61a29738b1304a8584557a5ca0fc5ec2', '+15551234567', 'DELIVERED', None, '2026-05-21 09:47:46.337298')]
 E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
 
 C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\sqlalchemy\engine\default.py:941: IntegrityError
 _________________ test_persist_delivery_log_writes_log_entry __________________
 
-self = <sqlalchemy.engine.base.Connection object at 0x000001DE7509F020>
-dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE7509FAD0>
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE750F8710>
-statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x000001DE750F8290>
-parameters = [('84c34b859f564d70ab3327babad1b131', 123, 'SM123', 'DELIVERED', 'twilio', '+15551234567', ...)]
+self = <sqlalchemy.engine.base.Connection object at 0x000001A2F2B66BD0>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F2B64500>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2B661B0>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x000001A2F2B65E20>
+parameters = [('ce6443c540db466c9c39292a371cbe36', 123, 'SM123', 'DELIVERED', 'twilio', '+15551234567', ...)]
 
     def _exec_single_context(
         self,
@@ -806,11 +806,11 @@ parameters = [('84c34b859f564d70ab3327babad1b131', 123, 'SM123', 'DELIVERED', 't
 C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\sqlalchemy\engine\base.py:1967: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE7509FAD0>
-cursor = <sqlite3.Cursor object at 0x000001DE7504F240>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F2B64500>
+cursor = <sqlite3.Cursor object at 0x000001A2F2A3A1C0>
 statement = 'INSERT INTO alert_delivery_logs (session_id, alert_id, provider_message_id, delivery_status, provider, recipient, timestamp, error_message, retry_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-parameters = ('84c34b859f564d70ab3327babad1b131', 123, 'SM123', 'DELIVERED', 'twilio', '+15551234567', ...)
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE750F8710>
+parameters = ('ce6443c540db466c9c39292a371cbe36', 123, 'SM123', 'DELIVERED', 'twilio', '+15551234567', ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2B661B0>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
@@ -820,7 +820,7 @@ C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n
 
 The above exception was the direct cause of the following exception:
 
-db_session = <sqlalchemy.orm.session.Session object at 0x000001DE7509EA80>
+db_session = <sqlalchemy.orm.session.Session object at 0x000001A2F29A7E30>
 
     def test_persist_delivery_log_writes_log_entry(db_session):
         session = create_session(db_session)
@@ -889,27 +889,27 @@ C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n
     self.dialect.do_execute(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE7509FAD0>
-cursor = <sqlite3.Cursor object at 0x000001DE7504F240>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F2B64500>
+cursor = <sqlite3.Cursor object at 0x000001A2F2A3A1C0>
 statement = 'INSERT INTO alert_delivery_logs (session_id, alert_id, provider_message_id, delivery_status, provider, recipient, timestamp, error_message, retry_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-parameters = ('84c34b859f564d70ab3327babad1b131', 123, 'SM123', 'DELIVERED', 'twilio', '+15551234567', ...)
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE750F8710>
+parameters = ('ce6443c540db466c9c39292a371cbe36', 123, 'SM123', 'DELIVERED', 'twilio', '+15551234567', ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2B661B0>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
 E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: alert_delivery_logs.id
 E       [SQL: INSERT INTO alert_delivery_logs (session_id, alert_id, provider_message_id, delivery_status, provider, recipient, timestamp, error_message, retry_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)]
-E       [parameters: ('84c34b859f564d70ab3327babad1b131', 123, 'SM123', 'DELIVERED', 'twilio', '+15551234567', '2026-05-21 09:46:53.461524', None, 2)]
+E       [parameters: ('ce6443c540db466c9c39292a371cbe36', 123, 'SM123', 'DELIVERED', 'twilio', '+15551234567', '2026-05-21 09:47:46.964110', None, 2)]
 E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
 
 C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\sqlalchemy\engine\default.py:941: IntegrityError
 ____ test_update_alert_delivery_status_writes_log_and_transitions_session _____
 
-self = <sqlalchemy.engine.base.Connection object at 0x000001DE750FADB0>
-dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE750FBEC0>
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE750FA450>
-statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x000001DE750FB230>
-parameters = [('1faf3889ea11487fac56ac7369c038ec', '+15551234567', 'SENT', 'SM123', '2026-05-21 09:46:54.077849')]
+self = <sqlalchemy.engine.base.Connection object at 0x000001A2F2BAD370>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F2BADAC0>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2BAFE30>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x000001A2F2BAF350>
+parameters = [('93c7791295954aa2a3fd038667d8029d', '+15551234567', 'SENT', 'SM123', '2026-05-21 09:47:47.623961')]
 
     def _exec_single_context(
         self,
@@ -1035,11 +1035,11 @@ parameters = [('1faf3889ea11487fac56ac7369c038ec', '+15551234567', 'SENT', 'SM12
 C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\sqlalchemy\engine\base.py:1967: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE750FBEC0>
-cursor = <sqlite3.Cursor object at 0x000001DE75C301C0>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F2BADAC0>
+cursor = <sqlite3.Cursor object at 0x000001A2F2981740>
 statement = 'INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)'
-parameters = ('1faf3889ea11487fac56ac7369c038ec', '+15551234567', 'SENT', 'SM123', '2026-05-21 09:46:54.077849')
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE750FA450>
+parameters = ('93c7791295954aa2a3fd038667d8029d', '+15551234567', 'SENT', 'SM123', '2026-05-21 09:47:47.623961')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2BAFE30>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
@@ -1049,8 +1049,8 @@ C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n
 
 The above exception was the direct cause of the following exception:
 
-db_session = <sqlalchemy.orm.session.Session object at 0x000001DE750FB2F0>
-mock_sio = <conftest.MockSocketIO object at 0x000001DE750FBB00>
+db_session = <sqlalchemy.orm.session.Session object at 0x000001A2F2B67C20>
+mock_sio = <conftest.MockSocketIO object at 0x000001A2F2B67950>
 
     def test_update_alert_delivery_status_writes_log_and_transitions_session(db_session, mock_sio):
         session = create_session(db_session, status='ALERT_SENT')
@@ -1109,17 +1109,17 @@ C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n
     self.dialect.do_execute(
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001DE750FBEC0>
-cursor = <sqlite3.Cursor object at 0x000001DE75C301C0>
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x000001A2F2BADAC0>
+cursor = <sqlite3.Cursor object at 0x000001A2F2981740>
 statement = 'INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)'
-parameters = ('1faf3889ea11487fac56ac7369c038ec', '+15551234567', 'SENT', 'SM123', '2026-05-21 09:46:54.077849')
-context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001DE750FA450>
+parameters = ('93c7791295954aa2a3fd038667d8029d', '+15551234567', 'SENT', 'SM123', '2026-05-21 09:47:47.623961')
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x000001A2F2BAFE30>
 
     def do_execute(self, cursor, statement, parameters, context=None):
 >       cursor.execute(statement, parameters)
 E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) NOT NULL constraint failed: alerts.id
 E       [SQL: INSERT INTO alerts (session_id, recipient_phone, status, provider_message_id, sent_at) VALUES (?, ?, ?, ?, ?)]
-E       [parameters: ('1faf3889ea11487fac56ac7369c038ec', '+15551234567', 'SENT', 'SM123', '2026-05-21 09:46:54.077849')]
+E       [parameters: ('93c7791295954aa2a3fd038667d8029d', '+15551234567', 'SENT', 'SM123', '2026-05-21 09:47:47.623961')]
 E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
 
 C:\Users\krsai\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\sqlalchemy\engine\default.py:941: IntegrityError
@@ -1139,4 +1139,4 @@ FAILED backend/tests/test_alert_service.py::test_update_alert_status_applies_val
 FAILED backend/tests/test_alert_service.py::test_update_alert_status_disallows_invalid_regression
 FAILED backend/tests/test_alert_service.py::test_persist_delivery_log_writes_log_entry
 FAILED backend/tests/test_alert_service.py::test_update_alert_delivery_status_writes_log_and_transitions_session
-================== 5 failed, 2 passed, 11 warnings in 3.28s ===================
+================== 5 failed, 2 passed, 11 warnings in 3.19s ===================
