@@ -51,7 +51,7 @@ export default function Dashboard() {
           .reverse()
           .map((line, idx) => (
             <div
-              key={idx}
+              key={line}
               style={{ padding: 6, borderBottom: "1px solid #eee" }}
             >
               {line}

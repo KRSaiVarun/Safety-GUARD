@@ -92,8 +92,9 @@ class AlertService:
 
     def transition_session_state(self, session_id: str, new_state: str):
         try:
+            normalized_session_id = self._normalize_uuid(session_id)
             sm = EmergencyStateMachine(sio=self.sio, notifier=None)
-            session_obj = self.db.query(models.EmergencySession).filter(models.EmergencySession.id == session_id).first()
+            session_obj = self.db.query(models.EmergencySession).filter(models.EmergencySession.id == normalized_session_id).first()
             if session_obj and session_obj.status != new_state:
                 sm.transition(session_obj, new_state, self.db)
         except Exception:

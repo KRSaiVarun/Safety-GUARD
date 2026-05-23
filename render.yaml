@@ -1,4 +1,14 @@
+# ============================================================
+# RENDER.COM DEPLOYMENT CONFIGURATION
+# ============================================================
+# See SECURITY_AND_DEPLOYMENT.md for setup instructions
+# All empty values MUST be set in Render dashboard
+# ============================================================
+
 services:
+  # ============================================================
+  # PRIMARY: FastAPI Backend (Web Service)
+  # ============================================================
   - type: web
     name: safety-guard-backend
     runtime: python
@@ -6,31 +16,205 @@ services:
     branch: main
     rootDir: backend
     buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:socket_app --host 0.0.0.0 --port $PORT
+    startCommand: uvicorn backend.main:socket_app --host 0.0.0.0 --port $PORT
     autoDeployTrigger: commit
     healthCheckPath: /health
+
+    # Environment Variables (Set these in Render Dashboard)
+    # DO NOT USE THIS FILE FOR SECRETS - use Render secrets manager
+    envVars:
+      # Database Configuration
+      - key: DATABASE_URL
+        scope: run
+        # Use Render PostgreSQL or Neon
+        # Format: postgresql://user:password@host:5432/dbname
+
+      # Redis Configuration
+      - key: REDIS_URL
+        scope: run
+        # Use Upstash Redis or Render Redis
+        # Format: redis://default:password@host:port
+
+      # Celery Configuration
+      - key: CELERY_BROKER_URL
+        scope: run
+        # Usually same as REDIS_URL
+
+      - key: CELERY_RESULT_BACKEND
+        scope: run
+        # Usually same as REDIS_URL
+
+      # Security Settings
+      - key: ENVIRONMENT
+        value: production
+
+      - key: DEBUG
+        value: "False"
+
+      - key: SECRET_KEY
+        scope: run
+        # Generate: python -c "import secrets; print(secrets.token_urlsafe(32))"
+        # MUST be changed - NEVER use defaults
+
+      - key: JWT_SECRET_KEY
+        scope: run
+        # Generate: python -c "import secrets; print(secrets.token_urlsafe(32))"
+        # MUST be changed - NEVER use defaults
+
+      # CORS & Frontend Configuration
+      - key: FRONTEND_URL
+        value: "https://safety-guard-kr-varun.netlify.app"
+
+      - key: CORS_ORIGINS
+        value: "https://safety-guard-kr-varun.netlify.app"
+
+      # Twilio Configuration (SMS/WhatsApp)
+      - key: TWILIO_ACCOUNT_SID
+        scope: run
+
+      - key: TWILIO_AUTH_TOKEN
+        scope: run
+
+      - key: TWILIO_PHONE_NUMBER
+        scope: run
+        # Format: +1234567890
+
+      - key: TWILIO_WHATSAPP_NUMBER
+        scope: run
+        # Format: whatsapp:+1234567890
+
+      - key: TWILIO_STATUS_CALLBACK_URL
+        value: "https://safety-guard-backend.onrender.com/api/emergency/twilio/status"
+
+      # Supabase Configuration
+      - key: SUPABASE_URL
+        scope: run
+
+      - key: SUPABASE_ANON_KEY
+        scope: run
+
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        scope: run
+
+      # Logging
+      - key: LOG_LEVEL
+        value: info
+
+  # ============================================================
+  # SECONDARY: Celery Worker (Background Jobs)
+  # ============================================================
+  - type: background_worker
+    name: safety-guard-celery-worker
+    runtime: python
+    plan: starter
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A backend.celery_app.celery worker --loglevel=info --concurrency=4
+    autoDeployTrigger: commit
+
+    # Use same environment variables as backend
+    # Copy all envVars from web service above
     envVars:
       - key: DATABASE_URL
-        value: ""
+        scope: run
       - key: REDIS_URL
-        value: ""
+        scope: run
+      - key: CELERY_BROKER_URL
+        scope: run
+      - key: CELERY_RESULT_BACKEND
+        scope: run
       - key: ENVIRONMENT
         value: production
       - key: DEBUG
         value: "False"
       - key: SECRET_KEY
-        value: ""
+        scope: run
+      - key: JWT_SECRET_KEY
+        scope: run
       - key: FRONTEND_URL
-        value: ""
+        value: "https://safety-guard-kr-varun.netlify.app"
       - key: CORS_ORIGINS
+        value: "https://safety-guard-kr-varun.netlify.app"
+      - key: TWILIO_ACCOUNT_SID
+        scope: run
+      - key: TWILIO_AUTH_TOKEN
+        scope: run
+      - key: TWILIO_PHONE_NUMBER
+        scope: run
+      - key: TWILIO_WHATSAPP_NUMBER
+        scope: run
+      - key: SUPABASE_URL
+        scope: run
+      - key: SUPABASE_ANON_KEY
+        scope: run
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        scope: run
+
+  # ============================================================
+  # OPTIONAL: Celery Beat (Scheduled Tasks)
+  # Uncomment to enable scheduled AI analysis and tasks
+  # ============================================================
+  # - type: background_worker
+  #   name: safety-guard-celery-beat
+  #   runtime: python
+  #   plan: starter
+  #   branch: main
+  #   rootDir: backend
+  #   buildCommand: pip install -r requirements.txt
+  #   startCommand: celery -A backend.celery_app.celery beat --loglevel=info
+  #   autoDeployTrigger: commit
+  #   envVars:
+  #     # Use same as celery-worker and web service
+    envVars:
+      - key: DATABASE_URL
         value: ""
+      - key: REDIS_URL
+        value: ""
+      - key: CELERY_BROKER_URL
+        value: ""
+      - key: CELERY_RESULT_BACKEND
+        value: ""
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "False"
       - key: TWILIO_ACCOUNT_SID
         value: ""
       - key: TWILIO_AUTH_TOKEN
         value: ""
       - key: TWILIO_PHONE_NUMBER
         value: ""
-      - key: SUPABASE_URL
+      - key: BACKEND_SOCKET_URL
         value: ""
-      - key: SUPABASE_ANON_KEY
+
+  - type: background_worker
+    name: safety-guard-celery-beat
+    runtime: python
+    plan: starter
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A backend.celery_app.celery beat --loglevel=info
+    autoDeployTrigger: commit
+    envVars:
+      - key: DATABASE_URL
+        value: ""
+      - key: REDIS_URL
+        value: ""
+      - key: CELERY_BROKER_URL
+        value: ""
+      - key: CELERY_RESULT_BACKEND
+        value: ""
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: TWILIO_ACCOUNT_SID
+        value: ""
+      - key: TWILIO_AUTH_TOKEN
+        value: ""
+      - key: TWILIO_PHONE_NUMBER
+        value: ""
+      - key: BACKEND_SOCKET_URL
         value: ""

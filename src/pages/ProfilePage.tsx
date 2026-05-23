@@ -129,8 +129,11 @@ export default function ProfilePage() {
               </p>
               <div className={styles.addGrid}>
                 <div className="input-group">
-                  <label className="input-label">Name</label>
+                  <label htmlFor="contact-name" className="input-label">
+                    Name
+                  </label>
                   <input
+                    id="contact-name"
                     className="input"
                     placeholder="Contact name"
                     value={newContact.name}
@@ -140,8 +143,11 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div className="input-group">
-                  <label className="input-label">Phone</label>
+                  <label htmlFor="contact-phone" className="input-label">
+                    Phone
+                  </label>
                   <input
+                    id="contact-phone"
                     className="input"
                     placeholder="+91 XXXXX XXXXX"
                     value={newContact.phone}
@@ -151,8 +157,11 @@ export default function ProfilePage() {
                   />
                 </div>
                 <div className="input-group">
-                  <label className="input-label">Relationship</label>
+                  <label htmlFor="contact-relationship" className="input-label">
+                    Relationship
+                  </label>
                   <input
+                    id="contact-relationship"
                     className="input"
                     placeholder="e.g. Mother, Friend"
                     value={newContact.relationship}

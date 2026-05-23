@@ -119,19 +119,18 @@ def test_update_alert_delivery_status_writes_log_and_transitions_session(db_sess
     assert delivery_log.delivery_status == 'DELIVERED'
     assert delivery_log.recipient == '+15551234567'
 
-    assert mock_sio.emitted == [
-        (
-            'ALERT_DELIVERED',
-            {
-                'session_id': str(session.id),
-                'recipient': '+15551234567',
-                'status': 'DELIVERED',
-                'error_message': None,
-                'message_sid': 'SM123',
-            },
-            'dashboard',
-        )
-    ]
+    assert mock_sio.emitted[0] == (
+        'ALERT_DELIVERED',
+        {
+            'session_id': str(session.id),
+            'recipient': '+15551234567',
+            'status': 'DELIVERED',
+            'error_message': None,
+            'message_sid': 'SM123',
+        },
+        'dashboard',
+    )
+    assert any(event[0] == 'SESSION_STATE_CHANGED' for event in mock_sio.emitted)
 
     db_session.refresh(session)
     assert session.status == 'ALERT_DELIVERED'

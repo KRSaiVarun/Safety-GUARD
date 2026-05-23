@@ -21,8 +21,8 @@ def engine():
 
 @pytest.fixture
 def db_session(engine):
-    Session = sessionmaker(bind=engine, autocommit=False, autoflush=False)
-    with Session() as session:
+    session_factory = sessionmaker(bind=engine, autocommit=False, autoflush=False)
+    with session_factory() as session:
         yield session
 
 
