@@ -1,0 +1,332 @@
+```txt id="women_safety_step_by_step_prompt"
+Build a complete AI-powered Women Safety Emergency System called “SmartShield / Safety-GUARD” with TWO synchronized screens:
+
+1. USER EMERGENCY SCREEN
+2. TACTICAL COMMAND DASHBOARD SCREEN
+
+The project must use:
+- React + Tailwind + Framer Motion (frontend)
+- FastAPI + Python (backend)
+- Socket.IO (real-time sync)
+- PostgreSQL
+- Redis
+- Celery workers
+- Google Maps API
+- WhatsApp emergency messaging
+
+==================================================
+STEP-BY-STEP SYSTEM FLOW
+==================================================
+
+==================================================
+STEP 1 — AUTHENTICATION SYSTEM
+==================================================
+
+Create:
+- Register page
+- Login page
+
+User registration fields:
+- Full Name
+- Email
+- Phone Number
+- Emergency Contact Number
+- Password
+
+After successful registration:
+Redirect user to PASSCODE SETUP.
+
+==================================================
+STEP 2 — PASSCODE SETUP
+==================================================
+
+User MUST set:
+- secure 4-digit emergency passcode
+
+Requirements:
+- Neon tactical UI
+- PIN keypad interface
+- Confirm passcode twice
+- Encrypt passcode before storing
+- Store in PostgreSQL
+
+If passcode not configured:
+- user CANNOT access dashboard
+
+==================================================
+STEP 3 — USER EMERGENCY SCREEN
+==================================================
+
+This is SCREEN 1.
+
+Design:
+- military / tactical UI
+- dark neon interface
+- glowing SOS button
+- pulse animations
+- fullscreen emergency mode
+
+Features:
+- giant SOS button
+- GPS tracking
+- passcode keypad
+- emergency siren
+- live status
+- signal indicators
+
+==================================================
+STEP 4 — SOS ACTIVATION
+==================================================
+
+When user presses SOS:
+
+1. Activate emergency mode
+2. Start emergency timer
+3. Start GPS tracking
+4. Open WebSocket connection
+5. Activate siren sound
+6. Start live location broadcasting
+7. Trigger backend emergency session
+8. Send WhatsApp emergency message
+
+==================================================
+STEP 5 — WHATSAPP ALERT SYSTEM
+==================================================
+
+When SOS activates:
+
+SEND WhatsApp message automatically:
+
+FROM:
++91 8548878488
+
+TO:
++91 8618266736
+
+Use:
+- CallMeBot as PRIMARY
+- Twilio WhatsApp as FALLBACK
+- Twilio SMS as SECONDARY FALLBACK
+
+==================================================
+MESSAGE FORMAT
+==================================================
+
+🚨 WOMEN SAFETY PROTOCOL ACTIVATED 🚨
+
+🚨 Emergency triggered via: PANIC BUTTON
+
+📍 LIVE LOCATION:
+https://www.google.com/maps?q=<latitude>,<longitude>
+
+📡 Real-time GPS tracking enabled.
+
+Please respond immediately or contact authorities.
+
+— Women Safety Protocol
+
+==================================================
+STEP 6 — REPEATED ALERTS
+==================================================
+
+VERY IMPORTANT:
+
+While SOS is ACTIVE:
+- send WhatsApp alert every 30 seconds
+- update GPS coordinates every 10 seconds
+- regenerate Google Maps link
+- broadcast live telemetry
+
+Until:
+- correct passcode entered
+
+Use:
+- Celery periodic tasks
+- Redis scheduler
+- async background workers
+
+==================================================
+STEP 7 — PASSCODE RE-ENTRY FAIL-SAFE
+==================================================
+
+User must enter correct passcode to STOP emergency.
+
+If:
+- wrong passcode
+OR
+- timeout occurs
+
+THEN:
+- continue sending alerts
+- increase AI risk level
+- continue siren
+- keep tracking active
+
+==================================================
+STEP 8 — CORRECT PASSCODE FLOW
+==================================================
+
+If correct passcode entered:
+
+1. Stop emergency siren
+2. Stop GPS tracking
+3. Stop WhatsApp alerts
+4. Stop recurring tasks
+5. Close emergency session
+6. Mark user SAFE
+7. Send SAFE notification
+8. Update dashboard in real-time
+
+SAFE MESSAGE:
+
+✅ USER MARKED SAFE
+
+Emergency has been resolved successfully.
+
+Tracking session closed.
+
+==================================================
+STEP 9 — DASHBOARD SCREEN
+==================================================
+
+This is SCREEN 2.
+
+This screen acts like:
+- Command Center
+- Tactical Dashboard
+- Emergency Monitoring System
+
+==================================================
+DASHBOARD FEATURES
+==================================================
+
+1. LIVE MAP
+- Show user live GPS location
+- Auto-update every 10 seconds
+- Animated map marker
+- Emergency pulse effect
+
+2. INCIDENT FEED
+Show:
+- SOS activated
+- location updates
+- alert sent
+- siren active
+- user safe
+
+3. AI RISK SCORE
+Display:
+LOW
+MEDIUM
+HIGH
+CRITICAL
+
+4. REAL-TIME TELEMETRY
+- GPS status
+- alert count
+- WhatsApp delivery status
+- connection status
+
+5. EMERGENCY STATUS PANEL
+Show:
+- ACTIVE
+- TRACKING
+- ALERT SENT
+- SAFE
+
+==================================================
+STEP 10 — AI FEATURES
+==================================================
+
+Add Python AI modules:
+
+1. Threat Detection
+2. Route Anomaly Detection
+3. Inactivity Detection
+4. Risk Prediction
+5. Voice Distress Detection
+
+AI should:
+- calculate live risk score
+- predict unsafe behavior
+- auto-escalate emergency
+
+==================================================
+STEP 11 — SOCKET.IO REAL-TIME EVENTS
+==================================================
+
+Emit:
+- SOS_TRIGGERED
+- LOCATION_UPDATED
+- ALERT_SENT
+- ALERT_DELIVERED
+- USER_SAFE
+- EMERGENCY_RESOLVED
+- AI_RISK_CHANGED
+
+==================================================
+STEP 12 — DATABASE STORAGE
+==================================================
+
+Store:
+- user data
+- encrypted passcodes
+- emergency sessions
+- GPS logs
+- alert history
+- AI risk scores
+- delivery logs
+
+==================================================
+STEP 13 — BACKEND ARCHITECTURE
+==================================================
+
+Backend:
+FastAPI + Python
+
+Use:
+- Celery
+- Redis
+- PostgreSQL
+- SQLAlchemy
+- Socket.IO
+
+Create modules:
+backend/
+ ├── api/
+ ├── services/
+ ├── ai_engine/
+ ├── websocket/
+ ├── tasks/
+ ├── alerts/
+ ├── database/
+
+==================================================
+STEP 14 — FRONTEND UI
+==================================================
+
+Use:
+- futuristic neon design
+- dark tactical theme
+- radar animations
+- pulse effects
+- holographic cards
+- responsive mobile UI
+
+==================================================
+STEP 15 — FINAL GOAL
+==================================================
+
+Build a real-world AI-powered women safety protocol system that:
+
+- detects emergencies
+- sends repeated WhatsApp alerts
+- shares live GPS location
+- tracks user safety
+- requires secure passcode re-entry
+- operates with two synchronized screens
+- provides a command-center tactical dashboard
+- feels like a military-grade emergency response system
+
+NOT a simple SOS app.
+```

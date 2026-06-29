@@ -1,0 +1,239 @@
+CRITICAL BUG FIX REQUIRED — WhatsApp emergency alerts are NOT being delivered.
+
+Current issue:
+- SOS activates correctly
+- Dashboard updates correctly
+- GPS tracking works
+- Emergency timers work
+- BUT WhatsApp messages are NOT actually sent
+
+This must be fixed immediately.
+
+==================================================
+GOAL
+==================================================
+
+When SOS is activated:
+
+A REAL WhatsApp message MUST be sent automatically:
+
+FROM:
++91 8548878488
+
+TO:
++91 8618266736
+
+The message must continue sending every 30 seconds UNTIL the correct passcode is entered.
+
+==================================================
+PRIMARY DELIVERY METHOD
+==================================================
+
+Use:
+CallMeBot WhatsApp API
+
+Endpoint:
+https://api.callmebot.com/whatsapp.php
+
+Required params:
+- phone
+- text
+- apikey
+
+==================================================
+IMPORTANT REQUIREMENTS
+==================================================
+
+1. DO NOT simulate success
+2. DO NOT fake delivery
+3. Wait for actual HTTP response
+4. Validate status code = 200
+5. Retry automatically on failure
+6. Persist delivery status in database
+7. Emit realtime Socket.IO telemetry
+
+==================================================
+BACKEND IMPLEMENTATION
+==================================================
+
+Update:
+- notification_service.py
+- notification_tasks.py
+- alert_service.py
+- emergency_state_machine.py
+
+Use:
+- async HTTP requests
+- Celery background workers
+- Redis queues
+
+==================================================
+MESSAGE FORMAT
+==================================================
+
+🚨 WOMEN SAFETY PROTOCOL ACTIVATED 🚨
+
+🚨 Emergency triggered via: PANIC BUTTON
+
+📍 LIVE LOCATION:
+https://www.google.com/maps?q=<latitude>,<longitude>
+
+📡 Real-time GPS tracking enabled.
+
+Please respond immediately or contact authorities.
+
+— Women Safety Protocol
+
+==================================================
+CALLMEBOT IMPLEMENTATION
+==================================================
+
+Implement Python function:
+
+send_callmebot_whatsapp()
+
+Requirements:
+- URL encode message properly
+- Handle emojis
+- Handle multiline text
+- Use requests or httpx
+- Add timeout handling
+- Add retries
+- Return real success/failure
+
+==================================================
+ENVIRONMENT VARIABLES
+==================================================
+
+Required:
+CALLMEBOT_APIKEY
+EMERGENCY_CONTACT_PHONE
+
+Example:
+CALLMEBOT_APIKEY=xxxxxxxx
+EMERGENCY_CONTACT_PHONE=918618266736
+
+==================================================
+ALERT REPEAT ENGINE
+==================================================
+
+While emergency is ACTIVE:
+- send WhatsApp alert every 30 seconds
+- regenerate GPS location link
+- increment alert counter
+- emit telemetry events
+
+Use:
+Celery periodic tasks
+
+==================================================
+STOP CONDITIONS
+==================================================
+
+ONLY stop sending alerts when:
+- correct passcode entered
+
+If:
+- wrong passcode
+- timeout
+- failed verification
+
+THEN:
+- continue alerts
+- continue siren
+- continue GPS tracking
+
+==================================================
+SOCKET.IO EVENTS
+==================================================
+
+Emit:
+- ALERT_SENDING
+- ALERT_SENT
+- ALERT_FAILED
+- ALERT_RETRYING
+- ALERT_DELIVERED
+
+Dashboard must show:
+- delivery status
+- retry count
+- last sent timestamp
+- total alerts sent
+
+==================================================
+ERROR HANDLING
+==================================================
+
+If CallMeBot fails:
+1. retry 3 times
+2. exponential backoff
+3. log exact error
+4. fallback to Twilio WhatsApp
+5. fallback to Twilio SMS
+
+==================================================
+DEBUGGING REQUIREMENTS
+==================================================
+
+Add detailed backend logs:
+
+[ALERT_ENGINE]
+[CALLMEBOT]
+[WHATSAPP_SEND]
+[ALERT_RETRY]
+[ALERT_FAILED]
+
+Log:
+- request URL
+- recipient
+- API response
+- HTTP status
+- retry attempts
+
+==================================================
+VERY IMPORTANT
+==================================================
+
+Before sending messages:
+Ensure recipient phone has completed CallMeBot activation.
+
+Steps:
+1. Save:
++34 644 59 78 45
+
+2. Send on WhatsApp:
+I allow callmebot to send me messages
+
+3. Receive API key
+
+4. Store API key in environment variable:
+CALLMEBOT_APIKEY
+
+==================================================
+FRONTEND REQUIREMENTS
+==================================================
+
+When alert sends successfully:
+- show green “WHATSAPP ALERT SENT”
+- animate delivery pulse
+- update alert counter
+
+When failed:
+- show red “ALERT DELIVERY FAILED”
+- auto retry countdown
+- show retry progress
+
+==================================================
+FINAL GOAL
+==================================================
+
+When SOS button is pressed:
+- GPS tracking starts
+- emergency session opens
+- tactical dashboard updates
+- siren activates
+- REAL WhatsApp message is delivered
+- repeated alerts continue every 30 seconds
+- alerts stop ONLY after correct passcode entered
+
+This must behave like a real-world emergency communication system, not a simulated demo.

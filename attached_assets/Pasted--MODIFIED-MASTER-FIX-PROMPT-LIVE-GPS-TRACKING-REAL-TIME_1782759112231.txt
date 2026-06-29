@@ -1,0 +1,354 @@
+# MODIFIED MASTER FIX PROMPT — LIVE GPS TRACKING & REAL-TIME ADMIN DASHBOARD
+
+```text
+CONTEXT:
+Safety-GUARD is a full-stack emergency response system with:
+- React + TypeScript frontend with Leaflet maps
+- FastAPI backend (Python)
+- PostgreSQL + Supabase database
+- Socket.IO for real-time communication
+- Zustand for state management
+- Twilio for WhatsApp alerts
+- AI risk assessment engine
+
+CURRENT PROBLEM:
+When a user activates SOS:
+1. GPS is captured (or not)
+2. WhatsApp alert is sent
+3. Admin dashboard shows default location (Aligarh: 27.8974, 78.0880)
+4. No emergency marker appears
+5. Map never updates with live GPS
+6. No real-time tracking data flows
+
+ROOT CAUSE ANALYSIS REQUIRED:
+Before modifying any code, inspect the existing implementation and identify the EXACT root cause from these possibilities:
+
+POSSIBLE ROOT CAUSES:
+- GPS permission denied or watchPosition() not called
+- Socket.IO connection failing or not emitting events
+- Wrong event name (LOCATION_UPDATED vs something else)
+- Wrong room name (dashboard vs admin vs emergency)
+- Backend not broadcasting to correct room
+- Zustand store not updating on event reception
+- Map reading fallback coordinates instead of Zustand state
+- Leaflet marker not created or not updating
+- Database not persisting GPS updates
+- Event listener not mounted or unmounted incorrectly
+
+INVESTIGATION CHECKLIST:
+
+1. GPS Layer
+   - Is navigator.geolocation.watchPosition() running?
+   - Browser permission status (granted/denied/prompt)
+   - Callback firing every 3 seconds?
+   - Coordinates accuracy and validity?
+
+2. Frontend → Backend Communication
+   - Socket.IO connection status (connected/disconnected)
+   - LOCATION_UPDATED event emitted?
+   - Payload structure correct?
+   - Console logs showing emission?
+
+3. Backend Processing (Python/FastAPI)
+   - Event received?
+   - Database updated?
+   - Broadcast to dashboard room?
+
+4. Backend → Admin Communication
+   - Admin joined "dashboard" room?
+   - LOCATION_UPDATED event received?
+   - Store updated?
+
+5. Map Rendering
+   - Reading from Zustand store?
+   - Fallback vs live coordinates?
+   - Marker created/moved?
+   - Polyline updated?
+
+REQUIRED FIXES:
+
+IMPLEMENT THESE EXACT CHANGES:
+
+A. GPS Tracking (React/TypeScript)
+```typescript
+// In emergency/useGPS.ts or similar
+const startGPSTracking = () => {
+  if (!navigator.geolocation) {
+    console.error('[GPS] Not supported');
+    return;
+  }
+
+  navigator.geolocation.watchPosition(
+    (position) => {
+      const { latitude, longitude, accuracy, speed, heading } = position.coords;
+      console.log('[GPS] Update:', { latitude, longitude, accuracy });
+      
+      // Store in Zustand
+      useEmergencyStore.getState().updateLocation({
+        latitude,
+        longitude,
+        accuracy,
+        speed,
+        heading,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Emit via Socket
+      socket.emit('LOCATION_UPDATED', {
+        sessionId: emergencySession.id,
+        userId: user.id,
+        latitude,
+        longitude,
+        accuracy,
+        speed,
+        heading,
+        battery: navigator.getBattery ? await navigator.getBattery().then(b => b.level) : null,
+        timestamp: new Date().toISOString(),
+        status: 'ACTIVE'
+      });
+    },
+    (error) => {
+      console.error('[GPS] Error:', error.message);
+      // Show permission UI if denied
+      if (error.code === 1) {
+        setShowPermissionRequest(true);
+      }
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 5000
+    }
+  );
+};
+```
+
+B. Backend Event Handler (Python/FastAPI)
+```python
+# In socket_manager.py or similar
+@sio.on('LOCATION_UPDATED')
+async def handle_location_update(sid, data):
+    print(f'[BACKEND] Received: {data}')
+    
+    # Update database
+    async with db_pool.acquire() as conn:
+        await conn.execute(
+            """
+            UPDATE emergency_sessions 
+            SET 
+                latitude = $1,
+                longitude = $2,
+                accuracy = $3,
+                speed = $4,
+                heading = $5,
+                battery = $6,
+                last_updated = NOW(),
+                gps_points = gps_points || $7::jsonb
+            WHERE session_id = $8
+            """,
+            data['latitude'],
+            data['longitude'],
+            data['accuracy'],
+            data['speed'],
+            data['heading'],
+            data['battery'],
+            json.dumps({'lat': data['latitude'], 'lng': data['longitude'], 'timestamp': data['timestamp']}),
+            data['sessionId']
+        )
+    
+    # Broadcast to all admin dashboards
+    await sio.emit('LOCATION_UPDATED', data, room='dashboard')
+    print(f'[BACKEND] Broadcast to dashboard room')
+```
+
+C. Admin Dashboard Listener (React/TypeScript)
+```typescript
+// In AdminDashboard.tsx
+useEffect(() => {
+  // Join dashboard room
+  socket.emit('join-room', 'dashboard');
+  console.log('[ADMIN] Joined dashboard room');
+  
+  // Listen for location updates
+  socket.on('LOCATION_UPDATED', (data) => {
+    console.log('[ADMIN] Received location:', data);
+    
+    // Update Zustand store
+    useDashboardStore.getState().updateEmergencyLocation(data);
+    
+    // Force map update
+    setForceUpdate(prev => !prev);
+  });
+  
+  return () => {
+    socket.off('LOCATION_UPDATED');
+  };
+}, []);
+```
+
+D. Map Component (React/TypeScript)
+```typescript
+// In EmergencyMap.tsx
+const EmergencyMap = () => {
+  const location = useDashboardStore(state => state.currentLocation);
+  const mapRef = useRef<LeafletMap>(null);
+  const markerRef = useRef<L.Marker>(null);
+  const polylineRef = useRef<L.Polyline>(null);
+  const pointsRef = useRef<[number, number][]>([]);
+  
+  // Use live location or fallback
+  const center = location 
+    ? [location.latitude, location.longitude] 
+    : [27.8974, 78.0880]; // Aligarh fallback
+  
+  console.log('[MAP] Center:', center, 'Live:', !!location);
+  
+  // Fly to location when live data arrives
+  useEffect(() => {
+    if (location && mapRef.current) {
+      console.log('[MAP] Flying to:', location);
+      mapRef.current.flyTo([location.latitude, location.longitude], 17);
+      
+      // Update marker
+      if (markerRef.current) {
+        markerRef.current.setLatLng([location.latitude, location.longitude]);
+      } else {
+        // Create marker with SOS badge
+        const icon = L.divIcon({
+          html: `
+            <div class="sos-marker">
+              <img src="${user.profilePhoto}" class="profile-image" />
+              <div class="sos-badge">SOS</div>
+              <div class="pulse-ring"></div>
+            </div>
+          `,
+          className: 'custom-marker',
+          iconSize: [50, 50]
+        });
+        
+        markerRef.current = L.marker([location.latitude, location.longitude], { icon })
+          .addTo(mapRef.current);
+      }
+      
+      // Update polyline
+      pointsRef.current.push([location.latitude, location.longitude]);
+      if (pointsRef.current.length > 100) {
+        pointsRef.current.shift();
+      }
+      
+      if (polylineRef.current) {
+        polylineRef.current.setLatLngs(pointsRef.current);
+      } else {
+        polylineRef.current = L.polyline(pointsRef.current, {
+          color: 'red',
+          weight: 3,
+          opacity: 0.8
+        }).addTo(mapRef.current);
+      }
+    }
+  }, [location]);
+  
+  return (
+    <MapContainer center={center} zoom={13} ref={mapRef}>
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {/* Rest of map */}
+    </MapContainer>
+  );
+};
+```
+
+VALIDATION TESTS:
+
+Run complete end-to-end test:
+
+1. User presses SOS
+   - [GPS] Update logged with coordinates
+   - [SOCKET] LOCATION_UPDATED emitted
+
+2. Backend receives
+   - [BACKEND] Received logged
+   - [DATABASE] Emergency session updated
+   - [BROADCAST] Sent to dashboard room
+
+3. Admin dashboard receives
+   - [ADMIN] Received location logged
+   - [STORE] Zustand updated
+   - [MAP] Flying to location
+
+4. Continuous updates (every 3 seconds)
+   - GPS updates
+   - Marker moves
+   - Polyline grows
+   - Stats update
+   - Database persists
+
+VERIFICATION CHECKLIST (ALL MUST PASS):
+- [ ] GPS permission granted
+- [ ] watchPosition() running continuously
+- [ ] GPS updates every 3 seconds
+- [ ] Coordinates logged in console
+- [ ] Socket.IO connected
+- [ ] LOCATION_UPDATED emitted
+- [ ] Backend receives events
+- [ ] Database updates persist
+- [ ] Broadcast to dashboard room
+- [ ] Admin joined dashboard room
+- [ ] Admin receives events
+- [ ] Zustand store updates
+- [ ] Map reads from Zustand
+- [ ] Map flies to location
+- [ ] Marker moves smoothly
+- [ ] Polyline trail visible
+- [ ] Dashboard stats update
+- [ ] WhatsApp alert sent
+- [ ] No console errors
+- [ ] Auto-refresh works
+
+DELIVERABLES:
+
+Provide:
+1. ROOT CAUSE FOUND
+   - Which component failed?
+   - Specific file and line number
+   - Why it failed
+
+2. FILES MODIFIED
+   - List all changed files
+   - Show code before/after
+   - Explain each change
+
+3. CONSOLE LOGS
+   - [GPS] logs with coordinates
+   - [SOCKET] logs showing emission
+   - [BACKEND] logs showing receipt
+   - [DATABASE] logs showing persistence
+   - [ADMIN] logs showing reception
+   - [MAP] logs showing updates
+   - [STORE] logs showing state changes
+
+4. DATABASE VERIFICATION
+   - Emergency session created
+   - GPS points array updating
+   - Last_updated timestamp changing
+
+5. TEST RESULTS
+   - Screenshots of working map
+   - Console logs from complete flow
+   - Final status of all 20 verification items
+
+CRITICAL SUCCESS CRITERIA:
+- Map shows user's ACTUAL location, not Aligarh
+- Marker moves every 3 seconds
+- Polyline shows route trail
+- Dashboard stats update in real-time
+- All 20 verification items pass
+- Complete end-to-end flow works without page refresh
+- All console logs print correctly
+- Database persists all GPS updates
+- WhatsApp continues working
+- No new bugs introduced
+
+DO NOT stop until ALL 20 verification items are GREEN.
+DO NOT stop until the map shows the user's LIVE location.
+DO NOT stop until the marker moves every 3 seconds without freezing.
+```

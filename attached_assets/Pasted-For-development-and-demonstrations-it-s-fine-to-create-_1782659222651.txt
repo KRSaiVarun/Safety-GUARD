@@ -1,0 +1,199 @@
+For development and demonstrations, it's fine to create **demo accounts**. However, they should **not bypass authentication or be hardcoded in production**. A better approach is to add a **development/demo authentication mode** that only works when a `DEMO_MODE=true` environment variable is enabled.
+
+Use this prompt:
+
+```text
+Implement a DEVELOPMENT/DEMO authentication mode for Safety-GUARD.
+
+IMPORTANT
+
+- This is ONLY for development and MCA project demonstrations.
+- Do NOT remove Supabase authentication.
+- Do NOT bypass security in production.
+- Demo mode must only work when:
+
+DEMO_MODE=true
+
+is set in the environment variables.
+
+=========================================
+DEMO ADMIN ACCOUNT
+=========================================
+
+Email:
+kr@gmail.com
+
+Password:
+admin
+
+Role:
+ADMIN
+
+Permissions:
+
+- Access Admin Dashboard
+- View Tactical Dashboard
+- View Live GPS
+- View Analytics
+- View Users
+- View Emergency Sessions
+- View AI Dashboard
+- View Notifications
+- View Reports
+
+Redirect after login:
+
+/admin/dashboard
+
+=========================================
+DEMO USER ACCOUNT
+=========================================
+
+Email:
+test@gmail.com
+
+Password:
+123456
+
+Role:
+USER
+
+Permissions:
+
+- Home
+- Profile
+- SOS
+- Emergency Contacts
+- Passcode
+- Emergency History
+- Settings
+
+Redirect after login:
+
+/dashboard
+
+=========================================
+IMPLEMENTATION
+=========================================
+
+When DEMO_MODE=true
+
+If login credentials match:
+
+Admin
+
+Email:
+kr@gmail.com
+
+Password:
+admin
+
+Return a demo JWT/session.
+
+If login credentials match:
+
+User
+
+Email:
+test@gmail.com
+
+Password:
+123456
+
+Return a demo JWT/session.
+
+Do NOT contact Supabase for these two demo accounts.
+
+For every other email:
+
+Continue using the normal Supabase Authentication flow.
+
+=========================================
+SESSION
+=========================================
+
+Persist the demo session.
+
+Browser refresh must keep the user logged in.
+
+Logout must clear the session.
+
+=========================================
+ROLE GUARDS
+=========================================
+
+Admin routes:
+
+/admin/*
+
+Only ADMIN role.
+
+User routes:
+
+/dashboard
+/profile
+/sos
+
+Only USER role.
+
+Prevent users from opening admin pages.
+
+Prevent admins from entering user-only pages unless explicitly allowed.
+
+=========================================
+UI
+=========================================
+
+On the Login page show:
+
+Demo Accounts
+
+Admin
+Email:
+kr@gmail.com
+
+Password:
+admin
+
+User
+
+Email:
+test@gmail.com
+
+Password:
+123456
+
+Include a "Use Demo Account" button to autofill credentials.
+
+This section must only appear when:
+
+DEMO_MODE=true
+
+=========================================
+PRODUCTION
+=========================================
+
+When
+
+DEMO_MODE=false
+
+Remove all demo accounts.
+
+Use only Supabase Authentication.
+
+Never expose demo credentials in production.
+
+=========================================
+OUTPUT
+=========================================
+
+At the end provide:
+
+- Files modified
+- Authentication flow
+- Role flow
+- Session flow
+- Confirmation that demo mode is isolated from production.
+```
+
+**One recommendation:** instead of using `password: admin` for the admin account, consider using something stronger like `Admin@123`. It still works well for demonstrations but avoids encouraging an extremely weak admin password pattern.

@@ -1,0 +1,174 @@
+Use this prompt if you're asking an AI coding assistant (such as Replit AI, GitHub Copilot Agent, or Cursor) to prepare and push your existing project to GitHub.
+
+---
+
+```text
+Push the existing Safety-GUARD project to GitHub.
+
+IMPORTANT:
+Do NOT create a new repository.
+Do NOT delete any existing code.
+Do NOT overwrite the Git history.
+Use the existing Git repository if it already exists.
+
+Before pushing:
+
+1. Perform a complete project validation.
+
+- Ensure there are no syntax errors.
+- Ensure the frontend builds successfully.
+- Ensure the backend starts correctly.
+- Remove temporary files.
+- Remove cache files.
+- Remove compiled artifacts.
+- Remove duplicate files.
+- Remove unused imports.
+- Remove debugging statements.
+- Remove console.log() statements that are no longer needed.
+- Remove TODO placeholders.
+- Fix linting issues where possible.
+
+2. Verify project structure.
+
+Keep only necessary files.
+
+Exclude:
+
+__pycache__/
+*.pyc
+node_modules/
+dist/
+build/
+.venv/
+venv/
+.env
+.env.local
+.env.production
+coverage/
+.cache/
+.pytest_cache/
+.idea/
+.vscode/settings.json (if it contains personal settings)
+.DS_Store
+
+3. Ensure .gitignore includes:
+
+Python
+Node.js
+Vite
+Supabase
+Docker
+Redis
+Logs
+Temporary files
+Operating system files
+
+4. Verify README.md
+
+Update:
+
+- Project description
+- Features
+- Technology stack
+- Installation
+- Environment variables
+- Screenshots
+- Architecture
+- Deployment instructions
+- License
+- Author information
+
+5. Check environment variables.
+
+Never commit secrets.
+
+Verify that:
+
+TWILIO_ACCOUNT_SID
+TWILIO_AUTH_TOKEN
+SUPABASE_URL
+SUPABASE_ANON_KEY
+DATABASE_URL
+JWT_SECRET
+REDIS_URL
+
+are loaded from .env and are NOT committed.
+
+Create or update:
+
+.env.example
+
+with placeholder values only.
+
+6. Run project validation.
+
+Frontend:
+
+npm install
+npm run lint
+npm run build
+
+Backend:
+
+pip install -r requirements.txt
+python -m py_compile .
+pytest (if tests exist)
+
+Fix any errors before pushing.
+
+7. Git operations.
+
+Show:
+
+git status
+
+Stage all required files:
+
+git add .
+
+Create a meaningful commit:
+
+git commit -m "Release v1.0.0 - Safety-GUARD Enterprise AI Women Safety Platform"
+
+Push to the current GitHub repository:
+
+git push origin main
+
+If the default branch is master, use:
+
+git push origin master
+
+If authentication is required, prompt for GitHub authentication instead of failing.
+
+8. After pushing, verify:
+
+- Latest commit appears on GitHub.
+- README renders correctly.
+- Images display correctly.
+- Folder structure is intact.
+- No secrets are exposed.
+- .env is ignored.
+- GitHub repository is clean.
+
+Finally provide:
+
+- Repository URL
+- Commit hash
+- Branch name
+- Files changed
+- Push status
+- Any warnings that still need attention
+
+Do not stop until the repository is successfully pushed or a clear authentication issue prevents the push.
+```
+
+### Before you push
+
+One important thing: **rotate your exposed credentials**. In this conversation you shared what appear to be Twilio credentials. Before making your repository public:
+
+* Regenerate the **Twilio Auth Token** in the Twilio Console.
+* Change any exposed database passwords.
+* Keep only placeholders in `.env.example`.
+* Verify `.env` is listed in `.gitignore`.
+
+This helps ensure no secrets are published to GitHub.

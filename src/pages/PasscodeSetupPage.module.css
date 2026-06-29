@@ -1,0 +1,218 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 16px 40px;
+  position: relative;
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 40%, rgba(255,45,85,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 70% 60%, rgba(10,132,255,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  background: rgba(10,10,24,0.85);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-xl);
+  padding: 40px 32px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.iconWrap {
+  width: 60px;
+  height: 60px;
+  background: rgba(255,45,85,0.1);
+  border: 1px solid rgba(255,45,85,0.3);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(255,45,85,0.15);
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.stepRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.stepDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--border-h);
+  background: transparent;
+  transition: all 0.3s;
+}
+
+.stepDotActive {
+  border-color: var(--red);
+  background: var(--red);
+  box-shadow: 0 0 10px rgba(255,45,85,0.6);
+}
+
+.stepDotDone {
+  border-color: var(--green);
+  background: var(--green);
+}
+
+.stepLine {
+  width: 40px;
+  height: 2px;
+  background: var(--border);
+}
+
+/* PIN dots */
+.pinRow {
+  display: flex;
+  gap: 20px;
+  padding: 8px 0;
+}
+
+.pinDot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2);
+  background: transparent;
+  transition: all 0.2s;
+}
+
+.pinDotFilled {
+  background: var(--red);
+  border-color: var(--red);
+  box-shadow: 0 0 14px rgba(255,45,85,0.7);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-10px); }
+  40%       { transform: translateX(10px); }
+  60%       { transform: translateX(-8px); }
+  80%       { transform: translateX(8px); }
+}
+
+.shake {
+  animation: shake 0.45s ease;
+}
+
+/* Error */
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,45,85,0.1);
+  border: 1px solid rgba(255,45,85,0.25);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--red);
+  width: 100%;
+  justify-content: center;
+}
+
+/* Keypad */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.key {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text-0);
+  font-family: var(--font);
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.key:hover:not(:disabled) {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--border-h);
+}
+
+.key:active:not(:disabled) {
+  transform: scale(0.94);
+  background: rgba(255,45,85,0.15);
+  border-color: rgba(255,45,85,0.4);
+}
+
+.key:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.keyDel {
+  color: var(--text-2);
+  font-size: 16px;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-3);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.hint strong {
+  color: var(--yellow);
+}
+
+.successIcon {
+  margin-bottom: 4px;
+  animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+
+@keyframes pop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1);   opacity: 1; }
+}

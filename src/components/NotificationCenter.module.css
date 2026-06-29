@@ -1,0 +1,145 @@
+.panel {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px;
+}
+
+.title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.35);
+  font-family: 'JetBrains Mono', monospace;
+  flex: 1;
+}
+
+.countBadge {
+  background: #FF1F3A;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  animation: badge-pop 0.3s ease;
+}
+
+@keyframes badge-pop {
+  0% { transform: scale(0.6); }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-height: 80px;
+}
+
+/* Toast */
+.toast {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-left: 2px solid;
+  overflow: hidden;
+  animation: toast-in 0.3s ease;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.toastIcon { font-size: 16px; flex-shrink: 0; }
+
+.toastBody { flex: 1; min-width: 0; }
+
+.toastMsg {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
+
+.toastTime {
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+
+.toastGlow {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  opacity: 0.04;
+}
+
+/* Empty */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 24px;
+  text-align: center;
+  color: rgba(255,255,255,0.2);
+  font-size: 12px;
+}
+
+.emptyIcon { font-size: 24px; opacity: 0.4; }
+.emptyHint { font-size: 10px; color: rgba(255,255,255,0.15); }
+
+/* Recent log */
+.recentLog { display: flex; flex-direction: column; }
+
+.logItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.logItem:last-child { border-bottom: none; }
+
+.logIcon { font-size: 13px; flex-shrink: 0; }
+
+.logBody {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: 8px;
+}
+
+.logMsg {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 500;
+}
+
+.logTime {
+  font-size: 9px;
+  color: rgba(255,255,255,0.2);
+  font-family: 'JetBrains Mono', monospace;
+  flex-shrink: 0;
+}

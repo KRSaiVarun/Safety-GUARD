@@ -1,0 +1,670 @@
+Your project has reached the stage where it needs an **enterprise-level refactor** rather than incremental fixes. One important note before the prompt: you've pasted what appear to be **real Twilio credentials**. You should **rotate those credentials immediately** in the Twilio Console because they are now exposed. Also, don't embed secrets directly in prompts or source code—use environment variables.
+
+Below is a strong master prompt you can give your AI coding assistant.
+
+---
+
+# 🚀 MASTER PROMPT – SAFETY-GUARD ENTERPRISE REBUILD (DO NOT SCAFFOLD. FIX THE EXISTING PROJECT.)
+
+## Objective
+
+You are a Senior Software Architect, Senior Full Stack Engineer, AI Engineer, Cyber Security Engineer, DevOps Engineer, Database Architect, and UI/UX Engineer.
+
+Your task is **NOT** to create a new project.
+
+You must **analyze the existing Safety-GUARD codebase**, identify every issue, and convert it into a **production-ready enterprise application**.
+
+Do not remove existing features.
+
+Only improve, optimize, refactor, and complete them.
+
+---
+
+# PRIORITY 1 — AUTHENTICATION (CRITICAL)
+
+Currently:
+
+* Login is broken.
+* Registration is broken.
+* Sessions are unreliable.
+* User data is not stored correctly.
+
+Fix everything.
+
+Implement production-grade authentication using Supabase Auth.
+
+Registration must:
+
+* Store user in Supabase Auth.
+* Create profile in PostgreSQL.
+* Save:
+
+  * Name
+  * Email
+  * Phone
+  * Emergency Contacts
+  * Passcode hash
+  * Created date
+  * Last login
+
+Login must:
+
+* Authenticate using Supabase Auth.
+* Create secure JWT session.
+* Refresh tokens automatically.
+* Redirect correctly.
+
+Forgot Password:
+
+* Email verification
+* Password reset
+
+Email verification:
+
+Required before first login.
+
+Session persistence:
+
+* Browser refresh should not log user out.
+
+---
+
+# PRIORITY 2 — SUPABASE DATABASE
+
+Current issue:
+
+Frontend is not saving data.
+
+Find every failing API call.
+
+Fix all CRUD operations.
+
+Every module must save to PostgreSQL.
+
+Store:
+
+Users
+
+Emergency Sessions
+
+GPS Locations
+
+Risk Scores
+
+Alert History
+
+Delivery Logs
+
+Notification Logs
+
+Emergency Contacts
+
+Passcodes (hashed)
+
+Incident History
+
+Replay Data
+
+Dashboard Analytics
+
+Never use mock data.
+
+Everything must be live.
+
+---
+
+# PRIORITY 3 — BACKEND REBUILD
+
+Current backend is weak.
+
+Convert it into enterprise architecture.
+
+Structure:
+
+```text
+backend/
+    api/
+    services/
+    repositories/
+    models/
+    schemas/
+    middleware/
+    websocket/
+    ai/
+    workers/
+    security/
+    notifications/
+    analytics/
+    monitoring/
+```
+
+Use:
+
+FastAPI
+
+Pydantic v2
+
+SQLAlchemy 2
+
+Alembic
+
+Redis
+
+Celery
+
+Socket.IO
+
+AsyncIO
+
+Background Tasks
+
+Dependency Injection
+
+Repository Pattern
+
+Service Layer
+
+Validation Layer
+
+Logging Layer
+
+Monitoring Layer
+
+Error Middleware
+
+Rate Limiting
+
+JWT Authentication
+
+CORS
+
+Structured Logging
+
+---
+
+# PRIORITY 4 — AI ENGINE
+
+The current AI module is basic.
+
+Build a complete AI engine.
+
+Modules:
+
+Risk Prediction
+
+Threat Detection
+
+Route Analysis
+
+Anomaly Detection
+
+Movement Analysis
+
+Behavior Analysis
+
+Safe Zone Prediction
+
+Unsafe Zone Prediction
+
+Battery Risk Analysis
+
+Network Failure Detection
+
+Emergency Severity Classification
+
+False Alarm Detection
+
+Priority Recommendation
+
+AI Dashboard Analytics
+
+Every module must output confidence scores.
+
+---
+
+# PRIORITY 5 — NOTIFICATION ENGINE
+
+Current WhatsApp implementation is unreliable.
+
+Implement:
+
+Twilio WhatsApp
+
+Retry Queue
+
+Delivery Status
+
+Read Status
+
+Failed Status
+
+Webhook Handling
+
+Background Queue
+
+Retry Logic
+
+Rate Limiting
+
+Message Templates
+
+Audit Logs
+
+Emergency Workflow
+
+```
+SOS
+
+↓
+
+QUEUE
+
+↓
+
+PROCESSING
+
+↓
+
+SENT
+
+↓
+
+DELIVERED
+
+↓
+
+READ
+
+↓
+
+VERIFIED SAFE
+```
+
+---
+
+# PRIORITY 6 — EMERGENCY WORKFLOW
+
+Workflow:
+
+Register
+
+↓
+
+Login
+
+↓
+
+Passcode Setup
+
+↓
+
+Dashboard
+
+↓
+
+SOS
+
+↓
+
+30 Second Timer
+
+↓
+
+If YES
+
+Stop
+
+↓
+
+If NO
+
+Trigger Emergency
+
+↓
+
+Capture GPS
+
+↓
+
+Generate Google Maps Link
+
+↓
+
+Send WhatsApp
+
+↓
+
+Store Database
+
+↓
+
+Notify Dashboard
+
+↓
+
+AI Risk Engine
+
+↓
+
+Repeat Every 30 Seconds
+
+↓
+
+User Enters Passcode
+
+↓
+
+Verify
+
+↓
+
+Stop Alerts
+
+↓
+
+Archive Session
+
+---
+
+# PRIORITY 7 — USER APPLICATION
+
+The dashboard must NOT be visible to users.
+
+User application should contain only:
+
+Home
+
+Profile
+
+SOS
+
+Emergency History
+
+Passcode
+
+Emergency Contacts
+
+Settings
+
+AI Safety Score
+
+Live GPS
+
+Emergency Status
+
+Nothing else.
+
+---
+
+# PRIORITY 8 — ADMIN APPLICATION
+
+Create a completely separate Admin Portal.
+
+Admin Login
+
+↓
+
+Dashboard
+
+↓
+
+Live Tactical Map
+
+↓
+
+Incident Feed
+
+↓
+
+AI Risk Engine
+
+↓
+
+Analytics
+
+↓
+
+Users
+
+↓
+
+Emergency Sessions
+
+↓
+
+Replay
+
+↓
+
+Reports
+
+↓
+
+System Health
+
+↓
+
+Notification Center
+
+↓
+
+Database Monitor
+
+↓
+
+Logs
+
+↓
+
+Settings
+
+Users must NEVER access this dashboard.
+
+Only Admin Role.
+
+RBAC:
+
+Admin
+
+Supervisor
+
+Operator
+
+Viewer
+
+---
+
+# PRIORITY 9 — DATABASE DESIGN
+
+Normalize every table.
+
+Create:
+
+users
+
+profiles
+
+admins
+
+roles
+
+permissions
+
+sessions
+
+gps_locations
+
+alerts
+
+alert_delivery_logs
+
+risk_history
+
+notifications
+
+emergency_contacts
+
+geofences
+
+incident_history
+
+analytics
+
+audit_logs
+
+Every table:
+
+UUID
+
+created_at
+
+updated_at
+
+deleted_at
+
+Indexes
+
+Foreign Keys
+
+Constraints
+
+---
+
+# PRIORITY 10 — SECURITY
+
+Implement:
+
+JWT
+
+Refresh Tokens
+
+BCrypt
+
+Passcode Hashing
+
+Helmet
+
+Rate Limiting
+
+CSRF
+
+XSS Protection
+
+SQL Injection Prevention
+
+Environment Validation
+
+Secrets Management
+
+Role-Based Access Control
+
+Audit Logs
+
+---
+
+# PRIORITY 11 — FRONTEND
+
+Convert UI into enterprise quality.
+
+User App
+
+Modern
+
+Fast
+
+Responsive
+
+Dark Theme
+
+Smooth Animations
+
+Dashboard:
+
+Government Command Center
+
+Real-Time
+
+Leaflet
+
+Socket.IO
+
+Glassmorphism
+
+Charts
+
+Heatmaps
+
+Analytics
+
+AI Panels
+
+---
+
+# PRIORITY 12 — CODE QUALITY
+
+Use:
+
+TypeScript Strict Mode
+
+ESLint
+
+Prettier
+
+SonarLint
+
+Unit Tests
+
+Integration Tests
+
+Pytest
+
+Vitest
+
+GitHub Actions
+
+Docker
+
+Render Deployment
+
+Zero warnings.
+
+Zero duplicate code.
+
+Zero TODOs.
+
+---
+
+# FINAL GOAL
+
+Do not scaffold.
+
+Do not generate placeholder code.
+
+Refactor the existing Safety-GUARD repository into a production-ready enterprise application.
+
+At the end:
+
+* Fix every existing bug.
+* Ensure Login and Registration work.
+* Persist all data in Supabase PostgreSQL.
+* Separate User and Admin applications.
+* Strengthen the backend architecture.
+* Implement a complete AI engine.
+* Deliver reliable WhatsApp alerts.
+* Ensure all Socket.IO events work correctly.
+* Produce clean, modular, scalable, secure code.
+
+Finally, generate:
+
+1. Architecture diagram.
+2. Database ER diagram.
+3. API documentation (OpenAPI).
+4. Deployment guide.
+5. Testing report.
+6. Security report.
+7. Performance report.
+8. A checklist confirming every feature has been implemented and verified.
+
+---
+
+One final recommendation: **do not include your actual Twilio Account SID, Auth Token, or database password in prompts or commit them to GitHub**. Rotate the exposed Twilio credentials, store new ones in your deployment platform's secret manager (Render, Replit, etc.), and reference them only through environment variables.

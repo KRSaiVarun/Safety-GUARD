@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Passcode</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #000000, #070404);
+        color: #fff;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        border: 5px solid #ff0000;
+        border-radius: 30px;
+        box-shadow:
+          0 0 20px rgba(255, 0, 0, 0.5),
+          0 0 40px rgba(255, 0, 0, 0.3);
+        z-index: -1;
+      }
+
+      h1 {
+        font-size: 3rem;
+        color: #fff;
+        text-shadow:
+          0 0 15px rgba(255, 255, 255, 0.7),
+          0 0 20px #ff0000;
+        margin-bottom: 1rem;
+      }
+
+      h2,
+      p {
+        font-size: 1rem;
+        color: #fff;
+        text-shadow:
+          0 0 5px #fff,
+          0 0 10px #ff0000;
+        margin-bottom: 1rem;
+      }
+
+      .form-card {
+        width: min(420px, calc(100% - 32px));
+        padding: 32px;
+        border-radius: 30px;
+        background: rgba(0, 0, 0, 0.65);
+        box-shadow: 0 0 40px rgba(255, 0, 0, 0.25);
+        backdrop-filter: blur(10px);
+      }
+
+      .passcode-input {
+        padding: 15px;
+        font-size: 1.2em;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 30px;
+        background: #333;
+        color: #fff;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        transition:
+          background 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .passcode-input:focus {
+        outline: none;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 1);
+        background: #444;
+      }
+
+      .passcode-input::placeholder {
+        color: #ff0000;
+      }
+
+      .btn {
+        position: relative;
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #fff;
+        text-decoration: none;
+        padding: 15px 50px;
+        margin-top: 20px;
+        border: none;
+        background: #000;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.4s ease;
+        border-radius: 30px;
+        box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+      }
+
+      .btn::before,
+      .btn::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 2px solid #ff0000;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        z-index: -1;
+        transition: all 0.4s ease;
+        border-radius: 30px;
+      }
+
+      .btn:hover::before,
+      .btn:hover::after {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.9);
+        transform: scale(1.05);
+      }
+
+      .btn:hover {
+        background: rgba(255, 0, 0, 0.1);
+      }
+
+      .menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 2.5rem;
+        }
+
+        .btn {
+          padding: 10px 30px;
+          font-size: 1.1em;
+        }
+
+        .passcode-input {
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-card">
+      <h1>Verify Passcode</h1>
+      <p>Enter your emergency passcode to cancel the alert.</p>
+      <form method="POST" action="{{ url_for('verify_reenter_passcode') }}">
+        <input
+          class="passcode-input"
+          type="password"
+          name="passcode"
+          placeholder="Enter passcode"
+          required
+          autofocus
+          maxlength="6"
+        />
+        <button class="btn" type="submit">Verify Passcode</button>
+      </form>
+    </div>
+  </body>
+</html>

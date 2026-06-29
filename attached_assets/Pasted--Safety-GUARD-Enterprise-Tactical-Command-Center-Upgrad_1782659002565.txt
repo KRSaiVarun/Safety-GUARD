@@ -1,0 +1,1067 @@
+# 🚨 Safety-GUARD — Enterprise Tactical Command Center Upgrade Prompt
+### Code-Aware · Animation-First · Based on Actual Codebase + Dashboard Screenshot
+
+---
+
+## ⚠️ CRITICAL RULES — READ FIRST
+
+```
+DO NOT rebuild the project from scratch.
+DO NOT delete or replace any existing file unless explicitly told to.
+DO NOT break authentication, routing, or Supabase logic.
+PRESERVE all existing stores: authStore, sessionStore, locationStore.
+PRESERVE all existing types in src/types/index.ts.
+PRESERVE all existing hooks: useEmergencySession.ts, useSocket.js.
+PRESERVE all backend services in backend/services/.
+PRESERVE FastAPI routes, Celery tasks, Twilio integration.
+ONLY enhance, extend, and animate what already exists.
+```
+
+---
+
+## 📁 EXISTING CODEBASE MAP (DO NOT BREAK)
+
+```
+src/
+├── stores/
+│   ├── authStore.ts          ← KEEP. User auth + session.
+│   ├── sessionStore.ts       ← KEEP. EmergencySession with Zustand + persist.
+│   └── locationStore.ts      ← KEEP. GPS trail + current location.
+├── components/
+│   ├── TacticalMap.tsx       ← UPGRADE (see below)
+│   ├── RiskMeter.tsx         ← UPGRADE (see below)
+│   ├── LiveIncidentFeed.tsx  ← UPGRADE (see below)
+│   ├── Navbar.tsx            ← UPGRADE (add status bar)
+│   └── RadarScan.tsx         ← KEEP (enhance only)
+├── hooks/
+│   └── useEmergencySession.ts ← KEEP. computeRiskScore(), triggerEmergency(), resolveEmergency()
+├── pages/
+│   ├── DashboardPage.tsx     ← MAJOR UPGRADE (see layout below)
+│   └── DashboardPage.module.css ← MAJOR UPGRADE
+├── types/index.ts            ← ADD new types only. Never remove.
+└── index.css                 ← ADD new CSS variables/keyframes only.
+backend/
+├── services/emergency_service.py ← KEEP
+├── services/emergency_state_machine.py ← KEEP
+├── services/alert_service.py ← KEEP
+└── tasks/ai_tasks.py         ← KEEP
+```
+
+---
+
+## 🎯 PRIMARY GOAL
+
+Transform `DashboardPage.tsx` into a **full-screen, real-time Emergency Command Center** that visually matches a military-grade tactical operations center.
+
+The screenshot reference shows:
+- Dark `#05050d` background (matches existing `--bg-0`)
+- Left panel: Live Alerts + Active Users
+- Center: Full live tracking map (Leaflet dark theme)
+- Right panel: AI Risk Score gauge + Risk Factors
+- Bottom: Incident feed + WhatsApp pipeline + Emergency Controls + Analytics
+- Top bar: Emergency banner, System Status, Active Alerts count, Users Online, clock, Admin profile
+
+**Replicate and surpass this layout.**
+
+---
+
+## 🏗️ NEW DASHBOARD LAYOUT — `DashboardPage.tsx`
+
+Replace the current two-column grid with a **5-zone tactical layout**:
+
+```
+┌──────────────────────────────────────────────────────┐
+│  TOP BAR (Navbar upgrade — always visible)           │
+├──────────┬───────────────────────────┬───────────────┤
+│  LEFT    │   CENTER: LIVE MAP        │  RIGHT        │
+│  PANEL   │   (TacticalMap upgrade)   │  PANEL        │
+│  240px   │   flex: 1                 │  280px        │
+│          │                           │               │
+├──────────┴───────────────────────────┴───────────────┤
+│  BOTTOM ROW: Incident Feed | WhatsApp | Controls | Analytics │
+└──────────────────────────────────────────────────────┘
+```
+
+**CSS Grid:**
+```css
+.commandCenter {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 240px 1fr 280px;
+  height: calc(100vh - 60px);   /* subtract navbar height */
+  gap: 8px;
+  padding: 8px;
+  background: var(--bg-0);
+}
+
+.leftPanel  { grid-row: 1 / 3; grid-column: 1; overflow-y: auto; }
+.centerMap  { grid-row: 1 / 2; grid-column: 2; }
+.rightPanel { grid-row: 1 / 3; grid-column: 3; overflow-y: auto; }
+.bottomRow  { grid-row: 2 / 3; grid-column: 2; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+```
+
+---
+
+## 🗺️ UPGRADE 1: TacticalMap.tsx
+
+**Current:** OpenStreetMap tiles, basic marker, simple dashed polyline.
+
+**Upgrade to:**
+
+### Map Theme
+Switch tile URL to dark Carto theme:
+```ts
+'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+```
+
+### Animated Circular Profile Marker
+Replace the current `divIcon` with this HTML string (inject user profile initial or photo):
+
+```ts
+const createSosMarker = (username: string, isActive: boolean) => L.divIcon({
+  html: `
+    <div class="sos-marker-root" data-active="${isActive}">
+      <!-- Expanding ripple rings (3 staggered) -->
+      <div class="ripple r1"></div>
+      <div class="ripple r2"></div>
+      <div class="ripple r3"></div>
+      <!-- Outer glow ring -->
+      <div class="outer-ring"></div>
+      <!-- Profile circle -->
+      <div class="profile-circle">
+        <span class="profile-initial">${username.charAt(0).toUpperCase()}</span>
+      </div>
+      <!-- SOS badge -->
+      ${isActive ? '<div class="sos-badge">SOS</div>' : ''}
+      <!-- Online dot -->
+      <div class="online-dot"></div>
+      <!-- Battery bar -->
+      <div class="battery-bar"><div class="battery-fill" style="width:67%"></div></div>
+    </div>
+  `,
+  iconSize: [56, 56],
+  iconAnchor: [28, 28],
+  className: '',
+})
+```
+
+Add to `index.css`:
+```css
+.sos-marker-root { position: relative; width: 56px; height: 56px; }
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid #ff2d55;
+  animation: ripple-expand 3s ease-out infinite;
+  pointer-events: none;
+}
+.r1 { inset: -8px;  animation-delay: 0s; }
+.r2 { inset: -18px; animation-delay: 1s; }
+.r3 { inset: -28px; animation-delay: 2s; }
+
+@keyframes ripple-expand {
+  0%   { opacity: 0.9; transform: scale(0.8); }
+  100% { opacity: 0;   transform: scale(1.6); }
+}
+
+.outer-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,45,85,0.6);
+  box-shadow: 0 0 20px rgba(255,45,85,0.8), 0 0 40px rgba(255,45,85,0.4);
+  animation: glow-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255,45,85,0.8), 0 0 40px rgba(255,45,85,0.4); }
+  50%       { box-shadow: 0 0 35px rgba(255,45,85,1.0), 0 0 70px rgba(255,45,85,0.6); }
+}
+
+.profile-circle {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a0a15, #2d0d20);
+  border: 2.5px solid #ff2d55;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.profile-initial { font-size: 22px; font-weight: 800; color: #fff; }
+
+.sos-badge {
+  position: absolute;
+  top: -8px; left: 50%; transform: translateX(-50%);
+  background: #ff2d55;
+  color: #fff;
+  font-size: 8px; font-weight: 900;
+  letter-spacing: 0.1em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(255,45,85,0.9);
+  animation: badge-flash 1s ease-in-out infinite;
+}
+@keyframes badge-flash {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.5; }
+}
+
+.online-dot {
+  position: absolute; bottom: 2px; right: 2px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #30d158;
+  border: 2px solid #05050d;
+  box-shadow: 0 0 8px rgba(48,209,88,0.8);
+}
+
+.battery-bar {
+  position: absolute; bottom: -6px; left: 4px; right: 4px;
+  height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px;
+}
+.battery-fill { height: 100%; border-radius: 2px; background: #30d158; transition: width 1s; }
+```
+
+### Smooth Marker Interpolation
+Replace `marker.setLatLng(pos)` with animated lerp:
+```ts
+function lerpLatLng(
+  from: [number,number], to: [number,number], steps = 30
+): void {
+  let i = 0
+  const tick = () => {
+    i++
+    const t = i / steps
+    const lat = from[0] + (to[0] - from[0]) * t
+    const lng = from[1] + (to[1] - from[1]) * t
+    markerRef.current?.setLatLng([lat, lng])
+    if (i < steps) requestAnimationFrame(tick)
+  }
+  requestAnimationFrame(tick)
+}
+```
+
+Call `lerpLatLng(prevPos, newPos)` instead of `setLatLng` directly.
+
+### Glowing Route Trail
+Replace the current `polyline` with:
+```ts
+// Outer glow (wider, more transparent)
+L.polyline(points, {
+  color: '#ff2d55', weight: 8, opacity: 0.15,
+}).addTo(map)
+
+// Inner bright trail
+L.polyline(points, {
+  color: '#ff2d55', weight: 2.5, opacity: 0.9,
+  dashArray: '8, 5',
+}).addTo(map)
+```
+
+### Geofence Zones
+Add safe zones (green polygon) and danger zones (red polygon):
+```ts
+// Safe zone (example — Indiranagar area)
+L.polygon(safeZoneCoords, {
+  color: '#30d158', fillColor: '#30d158', fillOpacity: 0.08,
+  weight: 1.5, dashArray: '6, 4',
+}).addTo(map).bindPopup('✅ Safe Zone')
+
+// Danger zone — flashes on entry
+const dangerZone = L.polygon(dangerZoneCoords, {
+  color: '#ff2d55', fillColor: '#ff2d55', fillOpacity: 0.12,
+  weight: 2,
+}).addTo(map)
+
+// Flash danger zone when SOS active
+if (showPulse) {
+  let opacity = 0.12
+  setInterval(() => {
+    opacity = opacity === 0.12 ? 0.35 : 0.12
+    dangerZone.setStyle({ fillOpacity: opacity })
+  }, 800)
+}
+```
+
+### Police & Hospital Markers
+```ts
+const policeIcon = L.divIcon({
+  html: `<div style="background:#0a84ff;border-radius:50%;width:24px;height:24px;
+         display:flex;align-items:center;justify-content:center;
+         font-size:12px;box-shadow:0 0 12px rgba(10,132,255,0.8)">🛡️</div>`,
+  iconSize: [24,24], className: ''
+})
+```
+
+### Live Info Popup on Marker Click
+```ts
+markerRef.current?.bindPopup(`
+  <div style="background:#0f0f22;border:1px solid rgba(255,45,85,0.4);
+              border-radius:12px;padding:12px;min-width:180px;">
+    <div style="font-weight:800;color:#ff2d55;font-size:14px">${username}</div>
+    <div style="color:#fff;font-size:11px;margin-top:6px">
+      🔋 ${battery}%  &nbsp; 📶 ${signal}<br/>
+      ⚡ ${speed} km/h  &nbsp; 🧭 ${heading}°<br/>
+      📍 ${lat.toFixed(4)}, ${lng.toFixed(4)}<br/>
+      🕐 ${lastUpdate}
+    </div>
+    <div style="margin-top:8px">
+      <a href="https://www.google.com/maps?q=${lat},${lng}"
+         target="_blank"
+         style="color:#0a84ff;font-size:11px">Open in Google Maps →</a>
+    </div>
+  </div>
+`).openPopup()
+```
+
+---
+
+## 🔴 UPGRADE 2: Dashboard Border SOS Flash
+
+When `currentSession?.state === 'ALERT_TRIGGERED'` or `'LIVE_TRACKING'`, apply to `.commandCenter`:
+
+```css
+.commandCenter[data-sos="true"] {
+  outline: 3px solid #ff2d55;
+  animation: border-sos-flash 1s ease-in-out infinite;
+}
+
+@keyframes border-sos-flash {
+  0%, 100% { outline-color: rgba(255,45,85,1.0); box-shadow: 0 0 40px rgba(255,45,85,0.4) inset; }
+  50%       { outline-color: rgba(255,45,85,0.3); box-shadow: none; }
+}
+```
+
+In JSX:
+```tsx
+<div className={styles.commandCenter} data-sos={!!currentSession && currentSession.state !== 'RESOLVED' && currentSession.state !== 'IDLE' ? 'true' : 'false'}>
+```
+
+---
+
+## 📢 UPGRADE 3: SOS Activation Banner
+
+When SOS triggers, show a full-width animated banner:
+
+```tsx
+{currentSession?.state === 'ALERT_TRIGGERED' && (
+  <div className={styles.sosBanner}>
+    <span className={styles.sosIcon}>🚨</span>
+    <marquee className={styles.sosText}>
+      WOMEN SAFETY PROTOCOL ACTIVATED — EMERGENCY TRACKING LIVE — WHATSAPP ALERTS DISPATCHED
+    </marquee>
+    <span className={styles.emergencyTimer}>
+      {formatDuration(elapsedSeconds)}
+    </span>
+  </div>
+)}
+```
+
+```css
+.sosBanner {
+  grid-column: 1 / -1;
+  background: linear-gradient(90deg, #2d0010, #1a0008, #2d0010);
+  border: 1px solid rgba(255,45,85,0.6);
+  border-radius: 10px;
+  padding: 10px 20px;
+  display: flex; align-items: center; gap: 12px;
+  animation: banner-slide-in 0.4s ease-out, banner-bg-pulse 2s ease-in-out infinite;
+  font-family: var(--mono);
+  font-size: 13px; font-weight: 700;
+  color: #ff2d55;
+  letter-spacing: 0.12em;
+}
+
+@keyframes banner-slide-in {
+  from { transform: translateY(-20px); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+@keyframes banner-bg-pulse {
+  0%, 100% { background: linear-gradient(90deg, #2d0010, #1a0008, #2d0010); }
+  50%       { background: linear-gradient(90deg, #3d0015, #250010, #3d0015); }
+}
+
+.emergencyTimer {
+  margin-left: auto; flex-shrink: 0;
+  font-size: 18px; font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255,45,85,0.8);
+  animation: timer-pulse 1s ease-in-out infinite;
+}
+@keyframes timer-pulse { 50% { opacity: 0.6; } }
+```
+
+Use `useEffect` with `setInterval(1000)` to track `elapsedSeconds` from `currentSession.startedAt`.
+
+---
+
+## 📊 UPGRADE 4: RiskMeter.tsx — Full AI Intelligence Panel
+
+Keep the existing SVG arc + needle but wrap it in a full right-panel component with risk factors bars.
+
+```tsx
+// New: RiskIntelPanel.tsx (replaces right panel content)
+export default function RiskIntelPanel({ score, factors }: Props) {
+  const level = getLevel(score)
+  return (
+    <div className={styles.riskPanel}>
+      <div className={styles.riskHeader}>
+        <span className={styles.aiIcon}>🤖</span>
+        <span>AI RISK ANALYSIS</span>
+        <span className={styles.riskBadge} style={{ background: `${level.color}22`, color: level.color, border: `1px solid ${level.color}55` }}>
+          {level.label}
+        </span>
+      </div>
+
+      {/* Animated gauge (existing RiskMeter SVG) */}
+      <RiskMeter score={score} />
+
+      {/* AI Recommendation text */}
+      <div className={styles.aiRec}>
+        <div className={styles.aiRecTitle}>AI Recommendation</div>
+        <div className={styles.aiRecText}>{getRecommendation(score, factors)}</div>
+      </div>
+
+      {/* Risk Factor Bars */}
+      <div className={styles.factorList}>
+        {RISK_FACTOR_DISPLAY.map(f => (
+          <div key={f.name} className={styles.factorRow}>
+            <span className={styles.factorName}>{f.name}</span>
+            <div className={styles.factorBarBg}>
+              <div
+                className={styles.factorBarFill}
+                style={{
+                  width: `${f.value}%`,
+                  background: f.value > 70 ? '#ff2d55' : f.value > 40 ? '#ff9f0a' : '#30d158',
+                  boxShadow: `0 0 8px ${f.value > 70 ? 'rgba(255,45,85,0.6)' : f.value > 40 ? 'rgba(255,159,10,0.6)' : 'rgba(48,209,88,0.6)'}`,
+                  transition: 'width 1s ease',
+                }}
+              />
+            </div>
+            <span className={styles.factorVal}>{f.value}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+Factor bars CSS:
+```css
+.factorBarBg {
+  flex: 1;
+  height: 5px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.factorBarFill {
+  height: 100%;
+  border-radius: 3px;
+}
+.factorRow {
+  display: flex; align-items: center; gap: 10px;
+  animation: factor-slide-in 0.5s ease-out both;
+}
+@keyframes factor-slide-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+```
+
+---
+
+## 📡 UPGRADE 5: LiveIncidentFeed.tsx — Slide-in Animated Events
+
+Keep the current event list. Enhance each item's entry animation and icon glows:
+
+```css
+/* In LiveIncidentFeed.module.css — replace .event */
+.event {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  animation: event-slide-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  position: relative;
+}
+
+@keyframes event-slide-in {
+  from { opacity: 0; transform: translateX(-30px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0)     scale(1); }
+}
+
+/* New events flash briefly */
+.event:first-child {
+  background: rgba(255,255,255,0.03);
+  animation: event-slide-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+             event-flash 1.5s ease-out;
+}
+
+@keyframes event-flash {
+  0%   { background: rgba(10,132,255,0.2); }
+  100% { background: rgba(255,255,255,0); }
+}
+
+.iconWrap {
+  /* existing styles + add: */
+  animation: icon-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes icon-pop {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+```
+
+Add severity coloring per event type:
+```ts
+// Map ALERT_SENT, PASSCODE_WRONG → red; RISK_SCORED → orange; others → normal
+const SEVERITY: Record<string, string> = {
+  ALERT_SENT: 'var(--red)',
+  ALERT_REPEATED: 'var(--red)',
+  PASSCODE_WRONG: 'var(--red)',
+  RISK_SCORED: 'var(--orange)',
+  LOCATION_UPDATED: 'var(--blue)',
+  PASSCODE_VERIFIED: 'var(--green)',
+  SESSION_STARTED: 'var(--green)',
+  SESSION_ENDED: 'var(--text-3)',
+}
+```
+
+---
+
+## 📱 UPGRADE 6: WhatsApp Pipeline Component
+
+Create `src/components/WhatsAppPipeline.tsx`:
+
+```tsx
+const STAGES = ['Queued','Processing','Sending','Sent','Delivered','Read','Acknowledged']
+
+export default function WhatsAppPipeline({ alertDelivery }) {
+  const currentStage = mapStatusToStage(alertDelivery.status) // 0-6
+  return (
+    <div className={styles.pipelineWrap}>
+      <div className={styles.pipelineHeader}>
+        <span>💬</span> WHATSAPP ALERT STATUS
+      </div>
+      <div className={styles.stages}>
+        {STAGES.map((stage, i) => (
+          <div key={stage} className={styles.stageCol}>
+            <div
+              className={`${styles.stageNode} ${i <= currentStage ? styles.active : ''} ${i === currentStage ? styles.current : ''}`}
+            >
+              {i < currentStage ? '✓' : STAGE_ICONS[i]}
+            </div>
+            {i < STAGES.length - 1 && (
+              <div className={`${styles.connector} ${i < currentStage ? styles.connectorActive : ''}`} />
+            )}
+          </div>
+        ))}
+      </div>
+      <div className={styles.stageLabels}>
+        {STAGES.map((s, i) => (
+          <span key={s} className={`${styles.stageLabel} ${i === currentStage ? styles.stageLabelActive : ''}`}>
+            {s}
+          </span>
+        ))}
+      </div>
+      {alertDelivery.count > 0 && (
+        <div className={styles.alertStats}>
+          <span>Sent: {alertDelivery.count}</span>
+          <span>Status: {alertDelivery.status}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+```css
+.stageNode {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  transition: all 0.4s ease;
+}
+.stageNode.active {
+  background: rgba(48,209,88,0.15);
+  border-color: #30d158;
+  box-shadow: 0 0 12px rgba(48,209,88,0.4);
+}
+.stageNode.current {
+  background: rgba(10,132,255,0.2);
+  border-color: #0a84ff;
+  box-shadow: 0 0 20px rgba(10,132,255,0.6);
+  animation: node-pulse 1.2s ease-in-out infinite;
+}
+@keyframes node-pulse {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 20px rgba(10,132,255,0.6); }
+  50%       { transform: scale(1.15); box-shadow: 0 0 35px rgba(10,132,255,0.9); }
+}
+.connector {
+  height: 2px; flex: 1;
+  background: rgba(255,255,255,0.08);
+  transition: background 0.6s ease;
+}
+.connectorActive {
+  background: #30d158;
+  box-shadow: 0 0 6px rgba(48,209,88,0.5);
+}
+```
+
+Wire to existing `alertDelivery` from `useSessionStore()`.
+
+---
+
+## 🧑‍💼 UPGRADE 7: Left Panel — Active Users List
+
+Create `src/components/ActiveUsersList.tsx`:
+
+```tsx
+export default function ActiveUsersList({ users, onSelectUser, selectedUserId }) {
+  return (
+    <div className={styles.usersList}>
+      <div className={styles.header}>
+        <span className={styles.liveDot} />
+        ACTIVE USERS ({users.length})
+      </div>
+      {users.map(user => (
+        <div
+          key={user.id}
+          className={`${styles.userCard} ${user.id === selectedUserId ? styles.selected : ''} ${user.hasSOS ? styles.sosUser : ''}`}
+          onClick={() => onSelectUser(user)}
+        >
+          <div className={styles.avatarWrap}>
+            <div className={styles.avatar}>{user.name.charAt(0)}</div>
+            <div className={`${styles.statusDot} ${user.online ? styles.online : styles.offline}`} />
+          </div>
+          <div className={styles.userInfo}>
+            <div className={styles.userName}>{user.name}</div>
+            <div className={styles.userLoc}>📍 {user.address || 'Locating...'}</div>
+            <div className={styles.userMeta}>
+              🔋 {user.battery ?? '--'}%
+              &nbsp;
+              <span className={user.hasSOS ? styles.sosBadgeSmall : styles.safeBadge}>
+                {user.hasSOS ? 'SOS' : 'SAFE'}
+              </span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+```css
+.userCard {
+  display: flex; gap: 10px; align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.userCard:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+  transform: translateX(3px);
+}
+.userCard.selected {
+  background: rgba(10,132,255,0.1);
+  border-color: rgba(10,132,255,0.4);
+  box-shadow: 0 0 16px rgba(10,132,255,0.2);
+}
+.userCard.sosUser {
+  background: rgba(255,45,85,0.08);
+  border-color: rgba(255,45,85,0.4);
+  animation: user-sos-pulse 2s ease-in-out infinite;
+}
+@keyframes user-sos-pulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(255,45,85,0.3); }
+  50%       { box-shadow: 0 0 28px rgba(255,45,85,0.6); }
+}
+.sosBadgeSmall {
+  font-size: 9px; font-weight: 900;
+  background: #ff2d55; color: #fff;
+  padding: 1px 5px; border-radius: 4px;
+  letter-spacing: 0.08em;
+  animation: badge-flash 1s ease-in-out infinite;
+}
+```
+
+---
+
+## 🧰 UPGRADE 8: Emergency Controls Panel
+
+Create `src/components/EmergencyControls.tsx`:
+
+```tsx
+const CONTROLS = [
+  { label: 'SOS ALERT', icon: '🚨', action: 'sos',    style: 'danger',   primary: true },
+  { label: 'Notify Police', icon: '🚓', action: 'police', style: 'warning' },
+  { label: 'Broadcast Alert', icon: '📢', action: 'broadcast', style: 'warning' },
+  { label: 'Share Location', icon: '📍', action: 'share',     style: 'info' },
+  { label: 'Generate Report', icon: '📄', action: 'report',   style: 'default' },
+  { label: 'Stop Tracking',  icon: '⏹',  action: 'stop',     style: 'default' },
+]
+
+export default function EmergencyControls({ onAction, isActive }) { ... }
+```
+
+```css
+.controlBtn {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-0);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.2s ease;
+}
+.controlBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.controlBtn.danger {
+  background: linear-gradient(135deg, #c00020, #ff2d55);
+  border-color: #ff2d55;
+  box-shadow: 0 0 20px rgba(255,45,85,0.4);
+  animation: sos-btn-breathe 2s ease-in-out infinite;
+  font-size: 14px; padding: 14px;
+}
+@keyframes sos-btn-breathe {
+  0%, 100% { box-shadow: 0 0 20px rgba(255,45,85,0.4); }
+  50%       { box-shadow: 0 0 40px rgba(255,45,85,0.8), 0 0 80px rgba(255,45,85,0.3); }
+}
+.controlBtn.warning { border-color: rgba(255,159,10,0.4); }
+.controlBtn.warning:hover { background: rgba(255,159,10,0.1); }
+```
+
+---
+
+## 📈 UPGRADE 9: Analytics Cards with Animated Counters
+
+Create `src/components/AnalyticsBar.tsx`:
+
+```tsx
+function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
+  const [display, setDisplay] = useState(0)
+
+  useEffect(() => {
+    let start = 0
+    const step = Math.ceil(target / 40)
+    const timer = setInterval(() => {
+      start += step
+      if (start >= target) { setDisplay(target); clearInterval(timer) }
+      else setDisplay(start)
+    }, 30)
+    return () => clearInterval(timer)
+  }, [target])
+
+  return <span>{display}{suffix}</span>
+}
+
+const METRICS = [
+  { label: 'Total Alerts',    icon: '🚨', value: 12, trend: '+25%', trendUp: true  },
+  { label: 'Safe Resolved',   icon: '✅', value: 8,  trend: '+33%', trendUp: true  },
+  { label: 'Avg Response',    icon: '⏱',  value: '2:15', isTime: true },
+  { label: 'High Risk Zones', icon: '⚠️', value: 5,  trend: '+66%', trendUp: false },
+]
+```
+
+```css
+.metricCard {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 14px;
+  animation: card-float-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@keyframes card-float-in {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+.metricVal {
+  font-size: 28px; font-weight: 900;
+  font-family: var(--mono);
+  background: linear-gradient(135deg, #fff 60%, rgba(255,255,255,0.4));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.trendUp   { color: #30d158; }
+.trendDown { color: #ff2d55; }
+```
+
+---
+
+## 🔝 UPGRADE 10: Navbar.tsx — System Status Bar
+
+Add to existing Navbar component. Below the current nav content, add a status row:
+
+```tsx
+<div className={styles.statusBar}>
+  <StatusPill label="WebSocket" status={wsConnected ? 'online' : 'offline'} />
+  <StatusPill label="GPS"       status={gpsActive   ? 'online' : 'offline'} />
+  <StatusPill label="Database"  status="online" />
+  <StatusPill label="Twilio"    status="online" />
+  <StatusPill label="AI Engine" status="online" />
+  <StatusPill label="Redis"     status="online" />
+
+  <div className={styles.separator} />
+
+  <div className={styles.onlineCount}>
+    <span className={styles.onlineDot} />
+    {onlineUsers} Online
+  </div>
+
+  <div className={styles.emergencyCount}>
+    🚨 {activeEmergencies} Emergency
+  </div>
+
+  <div className={styles.clock}>
+    {format(now, 'HH:mm:ss')} · {format(now, 'MMM dd, yyyy')}
+  </div>
+</div>
+```
+
+```css
+.statusBar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 6px 20px;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 11px; font-family: var(--mono);
+  overflow-x: auto;
+}
+.statusPill {
+  display: flex; align-items: center; gap: 5px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  white-space: nowrap;
+}
+.statusPill[data-status="online"]  .statusDot { background: #30d158; box-shadow: 0 0 8px rgba(48,209,88,0.8); }
+.statusPill[data-status="offline"] .statusDot { background: #ff2d55; box-shadow: 0 0 8px rgba(255,45,85,0.8); }
+.statusDot {
+  width: 6px; height: 6px; border-radius: 50%;
+  animation: status-blink 2s ease-in-out infinite;
+}
+@keyframes status-blink { 50% { opacity: 0.5; } }
+.clock {
+  margin-left: auto;
+  font-size: 13px; font-weight: 700;
+  color: var(--text-1);
+  font-variant-numeric: tabular-nums;
+}
+```
+
+---
+
+## 🌐 NEW SOCKET.IO EVENTS — Subscribe in `DashboardPage.tsx`
+
+Extend existing `useSocket` hook usage. Add these subscriptions via `useEffect`:
+
+```ts
+// In DashboardPage.tsx useEffect:
+const socket = useSocket()
+
+useEffect(() => {
+  if (!socket.current) return
+  const s = socket.current
+
+  s.on('LOCATION_UPDATED',    handleLocationUpdated)    // → update locationStore
+  s.on('SOS_TRIGGERED',       handleSosTriggered)       // → flash border, zoom map
+  s.on('SOS_CANCELLED',       handleSosCancelled)       // → clear border
+  s.on('EMERGENCY_CONFIRMED', handleEmergencyConfirmed) // → update state machine
+  s.on('EMERGENCY_RESOLVED',  handleEmergencyResolved)  // → clear session
+  s.on('AI_RISK_UPDATED',     handleAiRiskUpdated)      // → update risk score
+  s.on('ALERT_SENT',          handleAlertSent)          // → WhatsApp pipeline step
+  s.on('ALERT_DELIVERED',     handleAlertDelivered)     // → WhatsApp pipeline step
+  s.on('USER_ONLINE',         handleUserOnline)         // → update user list
+  s.on('USER_OFFLINE',        handleUserOffline)        // → update user list
+
+  return () => {
+    s.off('LOCATION_UPDATED')
+    s.off('SOS_TRIGGERED')
+    // ... etc
+  }
+}, [socket.current])
+```
+
+---
+
+## 🎬 NEW CSS ANIMATIONS — Add to `index.css`
+
+```css
+/* ── Scanning grid overlay ───────────────────────────────── */
+@keyframes grid-scan {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(100vh); }
+}
+
+.scanLine {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(10,132,255,0.4), transparent);
+  pointer-events: none; z-index: 9999;
+  animation: grid-scan 6s linear infinite;
+}
+
+/* ── Radar pulse (for RadarScan.tsx) ─────────────────────── */
+@keyframes radar-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── Glassmorphism cards ─────────────────────────────────── */
+.glass {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ── Number counter flash ────────────────────────────────── */
+@keyframes num-change {
+  0%  { transform: translateY(-10px); opacity: 0; }
+  100%{ transform: translateY(0);     opacity: 1; }
+}
+
+/* ── Neon text glow ──────────────────────────────────────── */
+.text-glow-red  { text-shadow: 0 0 20px rgba(255,45,85,0.8), 0 0 40px rgba(255,45,85,0.4); }
+.text-glow-blue { text-shadow: 0 0 20px rgba(10,132,255,0.8), 0 0 40px rgba(10,132,255,0.4); }
+
+/* ── Card hover lift ─────────────────────────────────────── */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+}
+
+/* ── Gradient border ─────────────────────────────────────── */
+.grad-border {
+  position: relative;
+}
+.grad-border::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,45,85,0.6), rgba(10,132,255,0.3), rgba(48,209,88,0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+```
+
+---
+
+## 📋 NEW FILES TO CREATE
+
+| File | Purpose |
+|------|---------|
+| `src/components/RiskIntelPanel.tsx` | Full right panel with gauge + factor bars |
+| `src/components/ActiveUsersList.tsx` | Left panel user list |
+| `src/components/WhatsAppPipeline.tsx` | Animated delivery pipeline |
+| `src/components/EmergencyControls.tsx` | Action buttons panel |
+| `src/components/AnalyticsBar.tsx` | Bottom analytics cards with counters |
+| `src/components/SosBanner.tsx` | Emergency activation banner |
+| `src/components/StatusPill.tsx` | Status indicator for navbar |
+| `src/hooks/useAdminUsers.ts` | Hook to fetch/simulate user list from Supabase |
+| `src/hooks/useClock.ts` | `useEffect` interval returning `Date` every second |
+| `src/hooks/useElapsedTime.ts` | Seconds since `currentSession.startedAt` |
+
+---
+
+## 📂 FILES TO MODIFY (NOT REPLACE)
+
+| File | Change |
+|------|--------|
+| `src/pages/DashboardPage.tsx` | Full layout overhaul using new components |
+| `src/pages/DashboardPage.module.css` | 5-zone grid layout + SOS flash |
+| `src/components/TacticalMap.tsx` | Dark tiles + lerp animation + glowing trail + geofences |
+| `src/components/RiskMeter.tsx` | Enhance SVG animation speed + add glow filter |
+| `src/components/LiveIncidentFeed.tsx` | Slide-in animations + severity colors |
+| `src/components/Navbar.tsx` | Add status bar row |
+| `src/index.css` | Add all new keyframes + utility classes |
+| `src/types/index.ts` | Add `AdminUser`, `WhatsAppStage`, `SystemStatus` types |
+
+---
+
+## ⚡ PERFORMANCE REQUIREMENTS
+
+```tsx
+// Wrap heavy panels
+const RiskIntelPanel   = React.memo(RiskIntelPanelComponent)
+const ActiveUsersList  = React.memo(ActiveUsersListComponent)
+const WhatsAppPipeline = React.memo(WhatsAppPipelineComponent)
+
+// Memoize derived values
+const riskScore = useMemo(() => currentSession?.riskScore ?? 0, [currentSession])
+const events    = useMemo(() => currentSession?.timeline ?? [], [currentSession])
+
+// Stable callbacks
+const handleUserSelect = useCallback((user: AdminUser) => { ... }, [])
+
+// Lazy load map
+const TacticalMap = lazy(() => import('@/components/TacticalMap'))
+```
+
+---
+
+## 📱 RESPONSIVE BREAKPOINTS
+
+```css
+/* Tablet */
+@media (max-width: 1024px) {
+  .commandCenter {
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: auto 1fr auto auto;
+  }
+  .rightPanel { grid-column: 1 / -1; grid-row: 3; }
+  .bottomRow  { grid-column: 1 / -1; grid-row: 4; grid-template-columns: 1fr 1fr; }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .commandCenter {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .leftPanel, .rightPanel, .centerMap, .bottomRow {
+    grid-column: 1; grid-row: auto;
+  }
+}
+```
+
+---
+
+## ✅ DELIVERABLE CHECKLIST
+
+Before finishing, verify:
+
+- [ ] `authStore`, `sessionStore`, `locationStore` still work identically
+- [ ] `useEmergencySession.ts` — `computeRiskScore`, `triggerEmergency`, `resolveEmergency` untouched
+- [ ] SOS button on DashboardPage still calls `triggerEmergency`
+- [ ] Map still receives `trail` from `locationStore` and `current` location
+- [ ] `alertDelivery` from `sessionStore` powers the WhatsApp pipeline
+- [ ] `currentSession.timeline` powers the incident feed
+- [ ] Supabase history query in `loadHistory` still works
+- [ ] Navbar auth still shows user name and logout
+- [ ] All new CSS uses existing `--bg-0`, `--red`, `--blue`, `--green` CSS variables
+- [ ] All animations use `requestAnimationFrame` or CSS `@keyframes` (no JS timers for visuals)
+- [ ] No `localStorage`/`sessionStorage` used in components (Zustand persist handles it)
+- [ ] TypeScript — no `any` types, all new components typed
+```

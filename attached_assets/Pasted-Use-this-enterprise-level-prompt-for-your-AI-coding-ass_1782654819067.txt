@@ -1,0 +1,310 @@
+Use this **enterprise-level prompt** for your AI coding assistant. It addresses both of your goals: making the technology stack stronger and simplifying the authentication flow while keeping separate admin and user roles.
+
+---
+
+# 🚀 SAFETY-GUARD ENTERPRISE UPGRADE – TECHNOLOGY STACK & AUTHENTICATION
+
+## Objective
+
+Upgrade the existing Safety-GUARD project into a production-grade enterprise application.
+
+Do **NOT** rebuild from scratch.
+
+Analyze the existing codebase and improve it while preserving current features.
+
+---
+
+# 1. STRENGTHEN THE TECHNOLOGY STACK
+
+The project should demonstrate a strong, industry-standard technology stack suitable for an MCA Final Year Project, research work, and enterprise deployment.
+
+## Programming Languages
+
+Use and integrate:
+
+* Python (Primary Backend, AI, APIs)
+* TypeScript (Frontend, Dashboard, Admin Portal)
+* C++ (High-performance AI algorithms, route optimization, geofence calculations, risk analysis modules)
+* Cython (Optimize Python AI modules and computationally intensive processing)
+* C (Low-level utilities, optional IoT and device communication modules)
+* CSS3 (Modern UI with animations and glassmorphism)
+* SQL (PostgreSQL database)
+* HTML5
+* JavaScript (where necessary)
+
+The README and documentation should clearly explain how each language contributes to the project.
+
+---
+
+# 2. PYTHON ENTERPRISE BACKEND
+
+Strengthen the Python backend using:
+
+* FastAPI
+* SQLAlchemy 2.x
+* Pydantic v2
+* Alembic
+* Celery
+* Redis
+* Socket.IO
+* AsyncIO
+* JWT Authentication
+* Background Workers
+* Dependency Injection
+* Repository Pattern
+* Service Layer
+* Structured Logging
+* Exception Handling
+* AI Engine Modules
+* WebSocket Support
+
+Organize the backend as:
+
+```text
+backend/
+├── api/
+├── services/
+├── repositories/
+├── models/
+├── schemas/
+├── middleware/
+├── websocket/
+├── ai/
+├── workers/
+├── notifications/
+├── security/
+├── analytics/
+├── monitoring/
+└── utils/
+```
+
+---
+
+# 3. C++ MODULES
+
+Create separate C++ modules for:
+
+* Route optimization
+* Geofence calculations
+* Fast distance calculations
+* AI risk scoring algorithms
+* Movement prediction
+* Emergency path analysis
+
+Expose these modules to Python using Cython.
+
+---
+
+# 4. CYTHON
+
+Optimize:
+
+* AI Risk Engine
+* Route Analysis
+* Threat Prediction
+* Heatmap Processing
+* Geofence Detection
+
+Compile performance-critical Python modules using Cython.
+
+---
+
+# 5. ADMIN & USER AUTHENTICATION
+
+The current login and registration flow is too complex.
+
+Simplify it while maintaining security.
+
+---
+
+## User Authentication
+
+The user should see a simple, clean login page.
+
+### Login
+
+Fields:
+
+* Email
+* Password
+
+Buttons:
+
+* Login
+* Create Account
+* Forgot Password
+
+The interface should be minimal and easy to use.
+
+---
+
+## Registration
+
+Only ask for:
+
+* Full Name
+* Email
+* Phone Number
+* Password
+* Confirm Password
+
+After successful registration:
+
+1. Verify email (optional if configured).
+2. Redirect the user to **Passcode Setup**.
+3. Create the user profile in Supabase.
+4. Store emergency contacts after first login.
+
+Do not ask for unnecessary information during registration.
+
+---
+
+## Admin Authentication
+
+Create a completely separate admin login.
+
+Example:
+
+```
+/login
+```
+
+→ User Login
+
+```
+/admin/login
+```
+
+→ Admin Login
+
+Admin dashboard must never be accessible from the user interface.
+
+---
+
+# 6. ROLE-BASED ACCESS
+
+Implement Role-Based Access Control (RBAC):
+
+Roles:
+
+* User
+* Admin
+* Supervisor
+* Operator
+* Viewer
+
+Only Admins can access:
+
+* Tactical Dashboard
+* Analytics
+* AI Monitoring
+* User Management
+* Emergency Sessions
+* Logs
+* Reports
+
+Users can only access:
+
+* Home
+* Profile
+* SOS
+* Passcode
+* Emergency Contacts
+* History
+* Settings
+
+---
+
+# 7. LOGIN EXPERIENCE
+
+Create a modern authentication UI.
+
+Features:
+
+* Minimal design
+* Fast loading
+* Responsive
+* Dark mode
+* Glassmorphism cards
+* Smooth animations
+* Password visibility toggle
+* Remember Me
+* Loading indicators
+* Clear validation messages
+
+Keep the interface simple and intuitive.
+
+---
+
+# 8. SUPABASE AUTHENTICATION
+
+Integrate Supabase Authentication properly.
+
+Features:
+
+* Sign Up
+* Login
+* Logout
+* Session Persistence
+* Refresh Tokens
+* Secure JWT
+* Email Verification (optional)
+* Password Reset
+
+Persist all user data to PostgreSQL.
+
+---
+
+# 9. SECURITY
+
+Implement:
+
+* JWT Authentication
+* BCrypt Password Hashing
+* Passcode Hashing
+* CSRF Protection
+* XSS Protection
+* SQL Injection Prevention
+* Rate Limiting
+* Secure Cookies
+* Environment Variable Validation
+* Audit Logs
+
+---
+
+# 10. FINAL RESULT
+
+After implementation:
+
+✅ User registration is simple.
+
+✅ User login is simple.
+
+✅ Admin login is separate.
+
+✅ User and Admin dashboards are completely isolated.
+
+✅ Supabase Authentication works correctly.
+
+✅ PostgreSQL stores all application data.
+
+✅ Python backend is modular and enterprise-grade.
+
+✅ C++ and Cython improve AI and computational performance.
+
+✅ The project demonstrates a strong multi-language architecture suitable for academic evaluation and industry standards.
+
+Finally, generate a report summarizing:
+
+* Technologies used
+* Languages used
+* Architecture
+* Authentication flow
+* Security features
+* Database schema
+* AI modules
+* Performance optimizations
+* Testing status
+* Deployment readiness
+
+This report should confirm that the project is production-ready, scalable, and suitable for an MCA Final Year Project, technical demonstrations, and innovation competitions.

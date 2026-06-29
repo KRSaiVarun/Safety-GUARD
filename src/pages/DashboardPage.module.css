@@ -1,0 +1,515 @@
+/* ── Page shell ─────────────────────────────────────────────── */
+.page {
+  position: relative;
+  padding: 130px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 100vh;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.pageAlarm {
+  animation: alarm-breathe 2s ease-in-out infinite;
+}
+
+@keyframes alarm-breathe {
+  0%,100% { box-shadow: inset 0 0 0 2px rgba(255,31,58,0.2); }
+  50%      { box-shadow: inset 0 0 0 2px rgba(255,31,58,0.55), inset 0 0 160px rgba(255,31,58,0.09); }
+}
+
+.gridOverlay {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,31,58,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,31,58,0.025) 1px, transparent 1px);
+  background-size: 52px 52px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── State Pipeline ──────────────────────────────────────────── */
+.pipeline {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 10px 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.pipeline::-webkit-scrollbar { display: none; }
+
+.pipeItem {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.pipeDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid;
+  flex-shrink: 0;
+  transition: all 0.4s;
+}
+
+.pipeDotActive { animation: dot-pulse 1.6s ease-in-out infinite; }
+
+@keyframes dot-pulse {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.5); }
+}
+
+.pipeLabel {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-left: 5px;
+  white-space: nowrap;
+  transition: color 0.4s;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.pipeConnector {
+  height: 1px;
+  width: 24px;
+  margin: 0 5px;
+  flex-shrink: 0;
+  transition: background 0.4s;
+}
+
+/* ── Main 3-column grid ─────────────────────────────────────── */
+.mainGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 270px 1fr 290px;
+  gap: 14px;
+  align-items: start;
+}
+
+/* ═══ SHARED card header ══════════════════════════════════════ */
+.cardHdr {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 14px;
+}
+
+.cardHdrTitle {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.3);
+  font-family: 'JetBrains Mono', monospace;
+  flex: 1;
+}
+
+.hdrDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.hdrDotRed  { background: #FF1F3A; box-shadow: 0 0 8px #FF1F3A; animation: dot-pulse 1s ease-in-out infinite; }
+.hdrDotGrey { background: rgba(255,255,255,0.2); }
+
+/* ═══ LEFT COLUMN ════════════════════════════════════════════ */
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Session card */
+.sessionCard {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.sosSmall {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #FF1F3A;
+  text-decoration: none;
+  background: rgba(255,31,58,0.12);
+  border: 1px solid rgba(255,31,58,0.3);
+  padding: 3px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.sosSmall:hover { background: rgba(255,31,58,0.25); }
+
+.sessionBody { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+
+.sessionState { display: flex; }
+
+.sessionStateBubble {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.4s;
+}
+
+.sessionMeta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.sMeta { display: flex; flex-direction: column; gap: 2px; }
+
+.sMetaLabel {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.25);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.sMetaVal {
+  font-size: 14px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  color: rgba(255,255,255,0.85);
+  transition: color 0.3s;
+}
+
+/* History card */
+.histCard {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.histCount {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: rgba(255,255,255,0.25);
+  margin-left: auto;
+}
+
+.histEmpty {
+  padding: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255,255,255,0.2);
+}
+
+.histList { display: flex; flex-direction: column; }
+
+.histItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.histItem:last-child { border-bottom: none; }
+.histItem:hover { background: rgba(255,255,255,0.04); }
+
+.histDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.histInfo { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+
+.histMethod {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.8);
+}
+
+.histDate {
+  font-size: 9px;
+  color: rgba(255,255,255,0.25);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ═══ CENTER COLUMN ══════════════════════════════════════════ */
+.centerCol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Map panel */
+.mapPanel {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.4s, box-shadow 0.4s;
+}
+
+.mapPanelAlarm {
+  border-color: rgba(255,31,58,0.4);
+  box-shadow: 0 0 50px rgba(255,31,58,0.1);
+}
+
+.mapHdr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.3);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.coordBadge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #21D4FF;
+}
+
+.trackBadge {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 100px;
+  border: 1px solid;
+  transition: all 0.4s;
+}
+
+.mapFallback {
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: rgba(255,255,255,0.2);
+  font-size: 13px;
+}
+
+.gpsStrip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.gpsCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 9px 6px;
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.gpsCell:last-child { border-right: none; }
+
+.gpsCellL {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.2);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.gpsCellV {
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.8);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ═══ RIGHT COLUMN ═══════════════════════════════════════════ */
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Risk panel */
+.riskPanel {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.riskChip {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 3px 10px;
+  border-radius: 100px;
+  border: 1px solid;
+  margin-left: auto;
+}
+
+.riskBody {
+  padding: 4px 14px 14px;
+}
+
+.threatFactors {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.threatRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.threatName {
+  font-size: 9px;
+  color: rgba(255,255,255,0.3);
+  font-family: 'JetBrains Mono', monospace;
+  width: 88px;
+  flex-shrink: 0;
+}
+
+.threatBar {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.threatFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1.2s ease;
+  min-width: 2px;
+}
+
+.threatPct {
+  font-size: 9px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.aiRec {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: rgba(191,90,242,0.06);
+  border: 1px solid rgba(191,90,242,0.15);
+  border-radius: 10px;
+}
+
+.aiRecTitle {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #bf5af2;
+  margin-bottom: 6px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.aiRecText {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+}
+
+.aiIdle {
+  margin-top: 10px;
+  padding: 10px;
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+}
+
+/* Replay card */
+.replayCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(33,212,255,0.04);
+  border: 1px solid rgba(33,212,255,0.12);
+  border-radius: 14px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.replayCard:hover {
+  background: rgba(33,212,255,0.08);
+  border-color: rgba(33,212,255,0.25);
+}
+
+.replayInfo { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+
+.replayTitle {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #21D4FF;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.replayDate {
+  font-size: 9px;
+  color: rgba(255,255,255,0.3);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 1280px) {
+  .mainGrid { grid-template-columns: 240px 1fr 270px; }
+}
+
+@media (max-width: 1050px) {
+  .mainGrid { grid-template-columns: 1fr 1fr; }
+  .leftCol  { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .rightCol { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+}
+
+@media (max-width: 700px) {
+  .page     { padding: 76px 12px 36px; gap: 10px; }
+  .mainGrid { grid-template-columns: 1fr; }
+  .leftCol  { grid-column: unset; display: flex; flex-direction: column; }
+  .rightCol { grid-column: unset; display: flex; flex-direction: column; }
+  .gpsStrip { grid-template-columns: repeat(3, 1fr); }
+  .gpsCell:nth-child(4),
+  .gpsCell:nth-child(5) { display: none; }
+  .pipeConnector { width: 12px; }
+}

@@ -1,0 +1,138 @@
+.page { min-height: 100vh; padding: 80px 24px 48px; }
+
+.container {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+.header {
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+
+.headerLeft { display: flex; align-items: center; gap: 14px; }
+
+.headerIcon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(191,90,242,0.08); border: 1px solid rgba(191,90,242,0.15);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.title { font-size: 22px; font-weight: 700; color: var(--text-0); margin: 0; }
+.subtitle { font-size: 13px; color: var(--text-3); margin: 2px 0 0; }
+
+.aiStatus {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px; font-weight: 600; color: var(--text-2);
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  padding: 7px 14px; border-radius: 100px;
+}
+
+.aiStatusActive {
+  color: #bf5af2;
+  background: rgba(191,90,242,0.1);
+  border-color: rgba(191,90,242,0.25);
+}
+
+.aiDot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: currentColor;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+.metricsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.metricCard {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 18px;
+}
+
+.metricIcon { flex-shrink: 0; }
+
+.metricText {
+  display: flex; flex-direction: column; gap: 2px;
+  min-width: 0;
+}
+
+.metricValue { font-size: 20px; font-weight: 800; line-height: 1; }
+.metricLabel { font-size: 12px; color: var(--text-2); font-weight: 500; }
+.metricSub   { font-size: 11px; color: var(--text-3); }
+
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.riskPanel,
+.analyticsPanel {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panelTitle {
+  font-size: 11px; font-weight: 700;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.factors { display: flex; flex-direction: column; gap: 10px; }
+
+.factorsTitle {
+  font-size: 11px; font-weight: 700;
+  color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.factorRow {
+  display: grid;
+  grid-template-columns: 110px 1fr 36px;
+  align-items: center;
+  gap: 10px;
+}
+
+.factorRow span:first-child {
+  font-size: 12px; color: var(--text-2);
+}
+
+.factorBar {
+  height: 5px; background: rgba(255,255,255,0.06);
+  border-radius: 3px; overflow: hidden;
+}
+
+.factorFill {
+  height: 100%; border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.factorPct {
+  font-size: 11px; color: var(--text-3);
+  text-align: right;
+}
+
+.idleNote {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(191,90,242,0.06);
+  border: 1px solid rgba(191,90,242,0.12);
+  border-radius: 10px; padding: 12px 16px;
+  font-size: 13px; color: var(--text-2);
+}
+
+@media (max-width: 900px) {
+  .page { padding: 76px 14px 40px; }
+  .metricsRow { grid-template-columns: repeat(2, 1fr); }
+  .panels { grid-template-columns: 1fr; }
+}

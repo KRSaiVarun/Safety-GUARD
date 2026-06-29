@@ -1,0 +1,450 @@
+Your project has **two separate issues**:
+
+1. **Twilio is misconfigured**, so WhatsApp messages never leave the backend.
+2. **The frontend and backend are not connected through Socket.IO and the database**, so the admin dashboard never receives live events.
+
+Don't ask the AI to "improve the UI" anymore. Instead, ask it to **debug and repair the entire end-to-end pipeline**.
+
+Use this prompt:
+
+---
+
+# 🚨 Safety-GUARD Critical End-to-End Debug & Repair
+
+```text
+This is NOT a UI redesign.
+
+This is a COMPLETE END-TO-END DEBUGGING TASK.
+
+Do NOT create new pages.
+Do NOT redesign the dashboard.
+Do NOT replace existing code.
+
+Your job is to make the entire Safety-GUARD system actually WORK.
+
+==================================================
+CURRENT PROBLEMS
+==================================================
+
+1. User activates SOS.
+
+Expected:
+
+✓ GPS updates continuously.
+✓ WhatsApp message is sent.
+✓ Socket.IO broadcasts.
+✓ Admin dashboard updates immediately.
+✓ Database stores session.
+✓ AI starts risk analysis.
+
+Actual:
+
+❌ WhatsApp fails.
+
+Twilio Error:
+
+Unable to create record:
+Twilio could not find a Channel with the specified From address.
+
+Error 63007
+
+----------------------------------------
+
+Admin Dashboard remains empty.
+
+Everything stays:
+
+Active Emergencies = 0
+
+Alerts = 0
+
+GPS = none
+
+Risk Score = 0
+
+Timeline empty
+
+Notification center empty
+
+Family response empty
+
+No live tracking
+
+==================================================
+FIRST: FIX TWILIO
+==================================================
+
+The From number is wrong.
+
+DO NOT use
+
+TWILIO_WHATSAPP_NUMBER=8618266736
+
+That is a personal phone.
+
+Instead verify Twilio configuration.
+
+For Sandbox use
+
+From:
+
+whatsapp:+14155238886
+
+If using a Business Account:
+
+Use the approved WhatsApp sender.
+
+Automatically detect which mode is configured.
+
+Never hardcode phone numbers.
+
+If Twilio credentials are missing:
+
+Log proper error.
+
+Retry.
+
+If WhatsApp fails:
+
+Fallback to SMS.
+
+==================================================
+SECOND: VERIFY USER FLOW
+==================================================
+
+Registration
+
+↓
+
+Login
+
+↓
+
+Passcode setup
+
+↓
+
+SOS
+
+↓
+
+Start Emergency Session
+
+↓
+
+Save to PostgreSQL
+
+↓
+
+Broadcast Socket.IO
+
+↓
+
+Send WhatsApp
+
+↓
+
+Update Dashboard
+
+↓
+
+Continue GPS every 3 seconds
+
+↓
+
+Repeat alert every 30 seconds
+
+↓
+
+Correct passcode
+
+↓
+
+Stop emergency
+
+↓
+
+Notify family
+
+↓
+
+Archive session
+
+Verify EVERY step.
+
+==================================================
+THIRD: DATABASE
+==================================================
+
+Verify PostgreSQL.
+
+Check inserts.
+
+Tables:
+
+users
+
+profiles
+
+emergency_sessions
+
+gps_locations
+
+alerts
+
+alert_delivery_logs
+
+family_responses
+
+risk_scores
+
+notifications
+
+Nothing should remain only in memory.
+
+==================================================
+FOURTH: SOCKET.IO
+==================================================
+
+Verify server.
+
+Verify frontend.
+
+Verify backend.
+
+Verify rooms.
+
+Verify namespaces.
+
+Verify broadcasts.
+
+Verify client subscriptions.
+
+The following events MUST work:
+
+LOCATION_UPDATED
+
+SOS_TRIGGERED
+
+SESSION_STARTED
+
+SESSION_UPDATED
+
+ALERT_SENT
+
+ALERT_DELIVERED
+
+AI_RISK_UPDATED
+
+FAMILY_RESPONSE
+
+SESSION_ENDED
+
+Verify each event.
+
+==================================================
+FIFTH: ADMIN DASHBOARD
+==================================================
+
+When user activates SOS
+
+Immediately show
+
+Active Emergency = 1
+
+Live GPS marker
+
+Moving marker
+
+Current coordinates
+
+Google Maps link
+
+Risk score
+
+Incident feed
+
+Notification
+
+Family response status
+
+Alert pipeline
+
+Timeline
+
+Battery
+
+Network
+
+AI recommendation
+
+Everything updates automatically.
+
+No page refresh.
+
+==================================================
+SIXTH: MAP
+==================================================
+
+Current map is static.
+
+Fix it.
+
+Marker must move.
+
+Draw trail.
+
+Animate marker.
+
+Auto zoom.
+
+Follow active user.
+
+Update every GPS message.
+
+==================================================
+SEVENTH: AI
+==================================================
+
+AI starts automatically.
+
+Calculate
+
+Risk
+
+Inactivity
+
+Route deviation
+
+Battery
+
+GPS quality
+
+Threat prediction
+
+Display live.
+
+==================================================
+EIGHTH: FAMILY RESPONSE
+==================================================
+
+After WhatsApp is delivered
+
+Family receives buttons
+
+YES
+
+NO
+
+NEED HELP
+
+Their response updates dashboard instantly.
+
+==================================================
+NINTH: LOGGING
+==================================================
+
+Create structured logs.
+
+Example
+
+[AUTH]
+
+[GPS]
+
+[SOCKET]
+
+[TWILIO]
+
+[AI]
+
+[DATABASE]
+
+[SESSION]
+
+Every step should log success or failure.
+
+==================================================
+TENTH: TEST EVERYTHING
+==================================================
+
+Run a complete test.
+
+Register
+
+Login
+
+SOS
+
+GPS
+
+WhatsApp
+
+Socket
+
+Dashboard
+
+Passcode
+
+Stop
+
+Archive
+
+Generate a final report.
+
+==================================================
+OUTPUT
+==================================================
+
+Do NOT stop after fixing one issue.
+
+Continue until ALL modules work together.
+
+Provide:
+
+✓ Files modified
+
+✓ Bugs fixed
+
+✓ Database changes
+
+✓ Socket fixes
+
+✓ Twilio fixes
+
+✓ GPS fixes
+
+✓ AI fixes
+
+✓ Dashboard fixes
+
+✓ Test results
+
+✓ Remaining issues
+```
+
+---
+
+## The main Twilio issue
+
+From the error:
+
+> **Twilio could not find a Channel with the specified From address (63007)**
+
+Your environment currently contains:
+
+```
+TWILIO_WHATSAPP_NUMBER=8618266736
+```
+
+This is **not** a valid Twilio WhatsApp sender.
+
+For the Twilio Sandbox, it should be:
+
+```
+TWILIO_WHATSAPP_NUMBER=whatsapp:+14155238886
+```
+
+or, if you're using a WhatsApp Business account, it must be your **approved Twilio WhatsApp sender**, not your personal phone number.
+
+Until that is corrected, WhatsApp messages will never be sent, and the rest of the emergency flow will not complete properly.

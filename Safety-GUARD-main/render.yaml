@@ -1,0 +1,91 @@
+services:
+  - type: web
+    name: safety-guard-backend
+    runtime: python
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:socket_app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: DATABASE_URL
+        value: ""
+      - key: REDIS_URL
+        value: ""
+      - key: CELERY_BROKER_URL
+        value: ""
+      - key: CELERY_RESULT_BACKEND
+        value: ""
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        value: ""
+      - key: JWT_SECRET_KEY
+        value: ""
+      - key: FRONTEND_URL
+        value: https://safety-guard-kr-varun.netlify.app
+      - key: CORS_ORIGINS
+        value: https://safety-guard-kr-varun.netlify.app
+      - key: TWILIO_ACCOUNT_SID
+        value: ""
+      - key: TWILIO_AUTH_TOKEN
+        value: ""
+      - key: TWILIO_PHONE_NUMBER
+        value: ""
+      - key: TWILIO_WHATSAPP_NUMBER
+        value: ""
+      - key: TWILIO_STATUS_CALLBACK_URL
+        value: https://safety-guard-backend.onrender.com/api/emergency/twilio/status
+      - key: SUPABASE_URL
+        value: ""
+      - key: SUPABASE_ANON_KEY
+        value: ""
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: ""
+      - key: LOG_LEVEL
+        value: info
+
+  - type: background_worker
+    name: safety-guard-celery-worker
+    runtime: python
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A backend.celery_app.celery worker --loglevel=info --concurrency=4
+    autoDeployTrigger: commit
+    envVars:
+      - key: DATABASE_URL
+        value: ""
+      - key: REDIS_URL
+        value: ""
+      - key: CELERY_BROKER_URL
+        value: ""
+      - key: CELERY_RESULT_BACKEND
+        value: ""
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        value: ""
+      - key: JWT_SECRET_KEY
+        value: ""
+      - key: FRONTEND_URL
+        value: https://safety-guard-kr-varun.netlify.app
+      - key: CORS_ORIGINS
+        value: https://safety-guard-kr-varun.netlify.app
+      - key: TWILIO_ACCOUNT_SID
+        value: ""
+      - key: TWILIO_AUTH_TOKEN
+        value: ""
+      - key: TWILIO_PHONE_NUMBER
+        value: ""
+      - key: SUPABASE_URL
+        value: ""
+      - key: SUPABASE_ANON_KEY
+        value: ""
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: ""

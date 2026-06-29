@@ -1,0 +1,3 @@
+- [SafetyGUARD auth & routing](safeguard-auth-routing.md) — admin detection requires BOTH email===kr@gmail.com AND role checks; demo passcode is 1234.
+- [SafetyGUARD nav architecture](safeguard-nav-arch.md) — Navbar shows for all routes; admin email check in mapSupabaseUser sets role='admin' at login time; LoginPage checks user.role post-login.
+- [SafetyGUARD GPS & Socket.IO](safeguard-gps-socket.md) — python-socketio must be pip-installed (not just in requirements.txt); `app=ASGIApp(sio,_app)` pattern; TacticalMap needs async import inside effect to avoid Leaflet race condition.

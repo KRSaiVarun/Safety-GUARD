@@ -1,0 +1,159 @@
+.page {
+  min-height: 100vh;
+  padding: 80px 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.headerLeft { display: flex; align-items: center; gap: 14px; }
+
+.headerIcon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(48,209,88,0.08); border: 1px solid rgba(48,209,88,0.15);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.title { font-size: 22px; font-weight: 700; color: var(--text-0); margin: 0; }
+.subtitle { font-size: 13px; color: var(--text-3); margin: 2px 0 0; }
+
+.statusPill {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px; font-weight: 600;
+  padding: 7px 14px; border-radius: 100px;
+}
+
+.statusActive {
+  color: var(--red);
+  background: rgba(255,45,85,0.1);
+  border: 1px solid rgba(255,45,85,0.25);
+}
+
+.statusIdle {
+  color: var(--text-2);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+}
+
+.statusDot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: currentColor;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.coordsBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(48,209,88,0.05);
+  border: 1px solid rgba(48,209,88,0.12);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--green);
+}
+
+.mapWrap {
+  flex: 1;
+  min-height: 600px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.mapLoader {
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--text-3);
+  font-size: 14px;
+}
+
+.spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* GPS stats strip */
+.statsStrip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.statCell {
+  background: rgba(255,255,255,0.02);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.statLabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+
+.statValue {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-0);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Session info card */
+.sessionCard {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sessionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sessionLabel {
+  font-size: 12px;
+  color: var(--text-3);
+  font-weight: 500;
+}
+
+.sessionValue {
+  font-size: 12px;
+  color: var(--text-1);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 900px) {
+  .statsStrip { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 700px) {
+  .page { padding: 76px 14px 0; }
+  .statsStrip { grid-template-columns: repeat(2, 1fr); }
+}

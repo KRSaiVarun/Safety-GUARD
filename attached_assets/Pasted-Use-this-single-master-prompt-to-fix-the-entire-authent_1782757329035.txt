@@ -1,0 +1,534 @@
+Use this **single master prompt** to fix the entire authentication flow, navigation, role management, UI alignment, and live admin dashboard while preserving your existing codebase.
+
+---
+
+# 🚀 Safety-GUARD Enterprise Role-Based Authentication & Live Dashboard Fix
+
+```text
+This is NOT a redesign.
+
+Do NOT rebuild the project.
+
+Do NOT remove existing functionality.
+
+Analyze the existing codebase and FIX all authentication, navigation, layout, role management, and real-time dashboard issues.
+
+==========================================================
+PRIMARY GOAL
+==========================================================
+
+Create a professional role-based system with two completely separate user experiences.
+
+1. USER
+2. ADMIN
+
+The project must behave exactly like a production application.
+
+==========================================================
+AUTHENTICATION
+==========================================================
+
+Keep Supabase Authentication.
+
+After login determine the user's role.
+
+Role = USER
+
+or
+
+Role = ADMIN
+
+Admin Email
+
+kr@gmail.com
+
+Role
+
+ADMIN
+
+Every other registered account
+
+Role
+
+USER
+
+Store role inside PostgreSQL/Supabase.
+
+Never hardcode dashboard access.
+
+==========================================================
+USER FLOW
+==========================================================
+
+Registration
+
+↓
+
+Login
+
+↓
+
+If first login
+
+Redirect to
+
+Set Passcode
+
+User creates secure 4-digit passcode.
+
+Hash passcode.
+
+Store securely.
+
+After passcode setup
+
+↓
+
+Redirect to Home Page.
+
+==========================================================
+USER HOME
+==========================================================
+
+The user Home page should NOT contain an Admin Dashboard option.
+
+User navigation should contain ONLY:
+
+🏠 Home
+
+🚨 Emergency SOS
+
+📜 Emergency History
+
+👨‍👩‍👧 Emergency Contacts
+
+👤 Profile
+
+⚙ Settings
+
+🚪 Logout
+
+There should NEVER be a Dashboard menu for users.
+
+==========================================================
+ADMIN FLOW
+==========================================================
+
+Only
+
+kr@gmail.com
+
+can become Admin.
+
+After Admin Login
+
+↓
+
+Redirect to Home
+
+Navigation
+
+🏠 Home
+
+🛰 Dashboard
+
+👥 Users
+
+📊 Analytics
+
+📡 Live Tracking
+
+🚨 Emergency Sessions
+
+🤖 AI Monitoring
+
+⚙ Settings
+
+🚪 Logout
+
+Dashboard menu should only exist for Admin.
+
+==========================================================
+LOGOUT
+==========================================================
+
+Add Logout button.
+
+Available on every page.
+
+When clicked
+
+Clear session.
+
+Clear Socket.IO connection.
+
+Clear Zustand stores.
+
+Clear local storage.
+
+Redirect to Login.
+
+==========================================================
+PASSCODE FLOW
+==========================================================
+
+Only on first login.
+
+Never ask again unless user changes it.
+
+Flow
+
+Login
+
+↓
+
+Check passcode
+
+If none
+
+↓
+
+Passcode Setup
+
+↓
+
+Home
+
+==========================================================
+HOME PAGE
+==========================================================
+
+Modern landing dashboard.
+
+Quick actions.
+
+Emergency status.
+
+SOS button.
+
+Profile summary.
+
+Emergency contacts.
+
+Recent history.
+
+No Admin controls.
+
+==========================================================
+ADMIN DASHBOARD
+==========================================================
+
+Match the reference dashboard style.
+
+Dark tactical UI.
+
+Perfect alignment.
+
+Professional spacing.
+
+Responsive layout.
+
+Three-column layout.
+
+==========================================================
+LIVE MAP
+==========================================================
+
+When any user activates SOS
+
+Immediately
+
+Create emergency session.
+
+Broadcast via Socket.IO.
+
+Admin dashboard automatically:
+
+Shows emergency marker.
+
+Centers map.
+
+Zooms to location.
+
+Displays user profile picture.
+
+Displays emergency icon.
+
+Displays ripple animation.
+
+Displays moving route trail.
+
+Displays GPS coordinates.
+
+Displays speed.
+
+Displays battery.
+
+Displays network.
+
+Updates every 3 seconds.
+
+No refresh.
+
+==========================================================
+LIVE USER TRACKING
+==========================================================
+
+Each user has:
+
+Green marker
+
+SOS users become
+
+Red flashing marker.
+
+Marker smoothly animates.
+
+Marker never jumps.
+
+Use interpolation.
+
+==========================================================
+WHATSAPP STATUS
+==========================================================
+
+Pipeline
+
+Queued
+
+↓
+
+Processing
+
+↓
+
+Sent
+
+↓
+
+Delivered
+
+↓
+
+Read
+
+↓
+
+Resolved
+
+Live updates.
+
+==========================================================
+AI PANEL
+==========================================================
+
+Live Risk Score.
+
+Threat prediction.
+
+Movement analysis.
+
+Battery monitoring.
+
+GPS accuracy.
+
+Network quality.
+
+Update continuously.
+
+==========================================================
+INCIDENT FEED
+==========================================================
+
+Every event appears instantly.
+
+Examples
+
+SOS Activated
+
+GPS Updated
+
+WhatsApp Sent
+
+Location Changed
+
+Family Responded
+
+Passcode Verified
+
+Emergency Closed
+
+==========================================================
+ALIGNMENT
+==========================================================
+
+Current layout has spacing and alignment issues.
+
+Fix every page.
+
+Ensure:
+
+Equal padding.
+
+Equal margins.
+
+Equal card heights.
+
+Proper grid alignment.
+
+Responsive breakpoints.
+
+Consistent typography.
+
+Consistent icon sizes.
+
+No overlapping elements.
+
+Perfect desktop and mobile layouts.
+
+==========================================================
+STATE MANAGEMENT
+==========================================================
+
+Persist session.
+
+Persist role.
+
+Persist passcode status.
+
+Persist Socket.IO.
+
+Restore after refresh.
+
+==========================================================
+SOCKET.IO
+==========================================================
+
+Verify:
+
+SESSION_STARTED
+
+LOCATION_UPDATED
+
+AI_RISK_UPDATED
+
+ALERT_SENT
+
+ALERT_DELIVERED
+
+SESSION_ENDED
+
+Dashboard updates automatically.
+
+==========================================================
+DATABASE
+==========================================================
+
+Ensure tables:
+
+users
+
+profiles
+
+passcodes
+
+emergency_sessions
+
+gps_locations
+
+alerts
+
+notifications
+
+risk_scores
+
+family_responses
+
+Everything must be stored.
+
+==========================================================
+PERFORMANCE
+==========================================================
+
+React.memo
+
+useMemo
+
+useCallback
+
+Lazy Loading
+
+Code Splitting
+
+Optimized Leaflet updates.
+
+==========================================================
+TESTING
+==========================================================
+
+Test:
+
+✓ User Registration
+
+✓ User Login
+
+✓ Passcode Setup
+
+✓ Home
+
+✓ SOS
+
+✓ GPS
+
+✓ WhatsApp
+
+✓ Admin Login
+
+✓ Dashboard Access
+
+✓ Live Tracking
+
+✓ Logout
+
+✓ Session Restore
+
+==========================================================
+DELIVERABLE
+==========================================================
+
+Do NOT stop until every module works.
+
+Provide:
+
+• Files modified
+
+• Components created
+
+• APIs updated
+
+• Socket events
+
+• Database changes
+
+• Authentication flow
+
+• User flow
+
+• Admin flow
+
+• Test results
+
+• Remaining issues
+
+Ensure the final application is production-ready, fully responsive, role-based, and the Admin Dashboard functions as a real-time emergency command center exactly like the provided reference image.
+```
+
+This prompt will guide the AI to:
+
+* Separate **User** and **Admin** experiences.
+* Force **passcode setup** on the first login.
+* Hide the **Dashboard** menu from normal users.
+* Show the **Dashboard** only to the admin (`kr@gmail.com`).
+* Add a **Logout** option on all pages.
+* Fix UI alignment and responsiveness.
+* Make the admin dashboard a **live tactical command center** that tracks SOS users on the map with animated markers and real-time updates.

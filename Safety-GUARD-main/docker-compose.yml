@@ -1,0 +1,75 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: safety_guard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    command: uvicorn backend.main:socket_app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend:/app/backend
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/safety_guard
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+
+  celery_worker:
+    build: ./backend
+    command: celery -A backend.celery_app.celery worker --loglevel=info
+    volumes:
+      - ./backend:/app/backend
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/safety_guard
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      BACKEND_SOCKET_URL: http://backend:8000
+    depends_on:
+      - redis
+      - db
+
+  celery_beat:
+    build: ./backend
+    command: celery -A backend.celery_app.celery beat --loglevel=info
+    volumes:
+      - ./backend:/app/backend
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/safety_guard
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      BACKEND_SOCKET_URL: http://backend:8000
+    depends_on:
+      - redis
+      - db
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
